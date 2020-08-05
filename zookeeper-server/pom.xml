@@ -185,7 +185,6 @@
 
   <properties>
     <!-- These properties will be set by the Maven Dependency plugin -->
-    <annotatedJdk>${org.checkerframework:checker-qual:jar}</annotatedJdk>
     <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
   </properties>
 
@@ -337,8 +336,7 @@
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
-            <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac//javac-9+181-r4173-1.jar</arg>
-            <arg>-Xbootclasspath/p:${annotatedJdk}</arg>
+            <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
             <arg>-Awarns</arg>
           </compilerArgs>
