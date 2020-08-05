@@ -118,9 +118,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-       <groupId>io.dropwizard.metrics</groupId>
-       <artifactId>metrics-core</artifactId>
-       <scope>provided</scope>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -157,31 +157,37 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.xerial.snappy</groupId>
       <artifactId>snappy-java</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <!--      <version>0.5.1</version>-->
+      <version>3.6.0</version>
+      <!--      <scope>system</scope>-->
+      <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>javac</artifactId>
+      <version>9+181-r4173-1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>object-construction-qual</artifactId>
+      <version>0.1.10-SNAPSHOT</version>
+    </dependency>
   </dependencies>
+
+  <properties>
+    <!-- These properties will be set by the Maven Dependency plugin -->
+    <annotatedJdk>${org.checkerframework:checker-qual:jar}</annotatedJdk>
+    <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
+  </properties>
 
   <build>
     <plugins>
@@ -244,6 +250,7 @@
         </executions>
       </plugin>
       <plugin>
+        <!-- This plugin will set properties values using dependency information -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -259,6 +266,12 @@
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>false</excludeTransitive>
             </configuration>
+          </execution>
+
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -281,7 +294,7 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
-	  
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -294,7 +307,79 @@
           </execution>
         </executions>
       </plugin>
-     </plugins>
+
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <fork>true</fork>
+          <!-- If using JDK 8, add source and target. -->
+          <source>1.8</source>
+          <target>1.8</target>
+          <showWarnings>true</showWarnings>
+          <compilerArguments>
+            <Xmaxerrs>10000</Xmaxerrs>
+            <Xmaxwarns>10000</Xmaxwarns>
+          </compilerArguments>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>net.sridharan.objectconstruction</groupId>
+              <artifactId>object-construction-checker</artifactId>
+              <version>0.1.10-SNAPSHOT</version>
+            </path>
+            <path>
+              <groupId>org.checkerframework</groupId>
+              <artifactId>checker</artifactId>
+              <!--              <version>0.5.1</version>-->
+              <version>3.6.0</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs combine.children="append">
+            <!-- If using JDK 8, use only the two arguments immediately below. -->
+            <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac//javac-9+181-r4173-1.jar</arg>
+            <arg>-Xbootclasspath/p:${annotatedJdk}</arg>
+            <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
+            <arg>-Awarns</arg>
+          </compilerArgs>
+          <!--          <compilerArgs>-->
+          <!--            &lt;!&ndash; If using JDK 8, use only the argument immediately below. &ndash;&gt;-->
+          <!--            <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>-->
+          <!--            &lt;!&ndash; If using JDK 11, remove the argument above, remove the-->
+          <!--                 space in the one below, and uncomment it. &ndash;&gt;-->
+          <!--            &lt;!&ndash; <arg>-J- -add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg> &ndash;&gt;-->
+
+          <!--            &lt;!&ndash; Optionally, -Awarns turns type-checking errors into warnings. &ndash;&gt;-->
+          <!--            &lt;!&ndash; <arg>-Awarns</arg> &ndash;&gt;-->
+          <!--          </compilerArgs>-->
+        </configuration>
+      </plugin>
+
+    </plugins>
   </build>
+
+
+  <profiles>
+    <profile>
+      <id>java-8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.19.1</version>
+            <configuration>
+              <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
+              <!-- put javac.jar on bootclasspath when executing tests -->
+              <argLine>-Xmx1g -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
