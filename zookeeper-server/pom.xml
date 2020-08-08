@@ -166,7 +166,7 @@
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
       <!--      <version>0.5.1</version>-->
-      <version>3.6.0</version>
+      <version>3.5.0</version>
       <!--      <scope>system</scope>-->
       <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
     </dependency>
@@ -180,6 +180,33 @@
       <groupId>net.sridharan.objectconstruction</groupId>
       <artifactId>object-construction-qual</artifactId>
       <version>0.1.10-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.4.13</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.7.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.4.13</version>
+    </dependency>
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 
@@ -331,14 +358,15 @@
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
               <!--              <version>0.5.1</version>-->
-              <version>3.6.0</version>
+              <version>3.5.0</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
-            <arg>-Awarns</arg>
+            <!--            <arg>-Awarns</arg>-->
+            <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
           </compilerArgs>
           <!--          <compilerArgs>-->
           <!--            &lt;!&ndash; If using JDK 8, use only the argument immediately below. &ndash;&gt;-->
