@@ -358,7 +358,8 @@
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
               <!--              <version>0.5.1</version>-->
-              <version>3.5.0</version>
+              <version>3.6.1-SNAPSHOT</version>
+              <!--              <version>3.5.0</version>-->
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
@@ -367,6 +368,7 @@
             <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
             <!--            <arg>-Awarns</arg>-->
             <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
+            <!--            <arg>-Astubs=/object-construction-checker/stubs</arg>-->
           </compilerArgs>
           <!--          <compilerArgs>-->
           <!--            &lt;!&ndash; If using JDK 8, use only the argument immediately below. &ndash;&gt;-->
