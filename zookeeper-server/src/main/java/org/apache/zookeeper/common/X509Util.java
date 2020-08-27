@@ -50,6 +50,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.zookeeper.common.X509Exception.KeyManagerException;
 import org.apache.zookeeper.common.X509Exception.SSLContextException;
 import org.apache.zookeeper.common.X509Exception.TrustManagerException;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -513,19 +514,19 @@ public abstract class X509Util implements Closeable, AutoCloseable {
         }
     }
 
-    public SSLSocket createSSLSocket() throws X509Exception, IOException {
+    @Owning public SSLSocket createSSLSocket() throws X509Exception, IOException {
         return getDefaultSSLContextAndOptions().createSSLSocket();
     }
 
-    public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws X509Exception, IOException {
+    @Owning public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws X509Exception, IOException {
         return getDefaultSSLContextAndOptions().createSSLSocket(socket, pushbackBytes);
     }
 
-    public SSLServerSocket createSSLServerSocket() throws X509Exception, IOException {
+    @Owning public SSLServerSocket createSSLServerSocket() throws X509Exception, IOException {
         return getDefaultSSLContextAndOptions().createSSLServerSocket();
     }
 
-    public SSLServerSocket createSSLServerSocket(int port) throws X509Exception, IOException {
+    @Owning public SSLServerSocket createSSLServerSocket(int port) throws X509Exception, IOException {
         return getDefaultSSLContextAndOptions().createSSLServerSocket(port);
     }
 

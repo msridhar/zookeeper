@@ -71,6 +71,8 @@ import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 import org.apache.zookeeper.server.util.ConfigUtils;
 import org.apache.zookeeper.util.CircularBlockingQueue;
 import org.apache.zookeeper.util.ServiceUtils;
+import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,7 +187,6 @@ public class QuorumCnxManager {
      * Socket options for TCP keepalive
      */
     private final boolean tcpKeepAlive = Boolean.getBoolean("zookeeper.tcpKeepAlive");
-
 
     /*
      * Socket factory, allowing the injection of custom socket implementations for testing
@@ -861,6 +862,7 @@ public class QuorumCnxManager {
      * @param sock
      *            Reference to socket
      */
+    @EnsuresCalledMethods(value = "#1", methods = "close")
     private void closeSocket(Socket sock) {
         if (sock == null) {
             return;
@@ -1117,7 +1119,7 @@ public class QuorumCnxManager {
                 }
             }
 
-            private ServerSocket createNewServerSocket() throws IOException {
+            @Owning private ServerSocket createNewServerSocket() throws IOException {
                 ServerSocket socket;
 
                 if (portUnification) {

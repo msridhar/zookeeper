@@ -33,6 +33,7 @@ import java.nio.channels.SocketChannel;
 import javax.net.ssl.SSLSocket;
 import org.apache.zookeeper.common.X509Exception;
 import org.apache.zookeeper.common.X509Util;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +129,7 @@ public class UnifiedServerSocket extends ServerSocket {
     }
 
     @Override
-    public Socket accept() throws IOException {
+    @Owning public Socket accept() throws IOException {
         if (isClosed()) {
             throw new SocketException("Socket is closed");
         }

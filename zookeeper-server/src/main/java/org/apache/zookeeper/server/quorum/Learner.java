@@ -64,6 +64,7 @@ import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -392,7 +393,7 @@ public class Learner {
             }
         }
 
-        private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
+        @Owning private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
             Socket sock = createSocket();
 
             // leader connection timeout defaults to tickTime * initLimit
@@ -462,7 +463,7 @@ public class Learner {
      * Creating a simple or and SSL socket.
      * This can be overridden in tests to fake already connected sockets for connectToLeader.
      */
-    protected Socket createSocket() throws X509Exception, IOException {
+    @Owning protected Socket createSocket() throws X509Exception, IOException {
         Socket sock;
         if (self.isSslQuorum()) {
             sock = self.getX509Util().createSSLSocket();
