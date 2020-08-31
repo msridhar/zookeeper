@@ -78,11 +78,11 @@ public class SSLContextAndOptions {
         return sslContext;
     }
 
-    public SSLSocket createSSLSocket() throws IOException {
+    @Owning public SSLSocket createSSLSocket() throws IOException {
         return configureSSLSocket((SSLSocket) sslContext.getSocketFactory().createSocket(), true);
     }
 
-    public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws IOException {
+    @Owning public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws IOException {
         SSLSocket sslSocket;
         if (pushbackBytes != null && pushbackBytes.length > 0) {
             sslSocket = (SSLSocket) sslContext.getSocketFactory()
@@ -93,12 +93,12 @@ public class SSLContextAndOptions {
         return configureSSLSocket(sslSocket, false);
     }
 
-    public SSLServerSocket createSSLServerSocket() throws IOException {
+    @Owning public SSLServerSocket createSSLServerSocket() throws IOException {
         SSLServerSocket sslServerSocket = (SSLServerSocket) sslContext.getServerSocketFactory().createServerSocket();
         return configureSSLServerSocket(sslServerSocket);
     }
 
-    public SSLServerSocket createSSLServerSocket(int port) throws IOException {
+    @Owning public SSLServerSocket createSSLServerSocket(int port) throws IOException {
         SSLServerSocket sslServerSocket = (SSLServerSocket) sslContext.getServerSocketFactory().createServerSocket(port);
         return configureSSLServerSocket(sslServerSocket);
     }
