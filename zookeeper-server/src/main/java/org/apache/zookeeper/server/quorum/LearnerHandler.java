@@ -51,6 +51,7 @@ import org.apache.zookeeper.server.quorum.QuorumPeer.LearnerType;
 import org.apache.zookeeper.server.quorum.auth.QuorumAuthServer;
 import org.apache.zookeeper.server.util.MessageTracker;
 import org.apache.zookeeper.server.util.ZxidUtils;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class LearnerHandler extends ZooKeeperThread {
 
     protected final Socket sock;
 
-    public Socket getSocket() {
+    @NotOwning public Socket getSocket() {
         return sock;
     }
 
