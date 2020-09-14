@@ -358,7 +358,7 @@
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
               <!--              <version>0.5.1</version>-->
-              <version>3.6.1-SNAPSHOT</version>
+              <version>3.6.1</version>
 <!--              <version>3.5.0</version>-->
             </path>
           </annotationProcessorPaths>
