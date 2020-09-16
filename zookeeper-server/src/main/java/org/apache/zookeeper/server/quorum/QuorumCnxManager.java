@@ -71,6 +71,7 @@ import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 import org.apache.zookeeper.server.util.ConfigUtils;
 import org.apache.zookeeper.util.CircularBlockingQueue;
 import org.apache.zookeeper.util.ServiceUtils;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -401,7 +402,6 @@ public class QuorumCnxManager {
             closeSocket(sock);
             return;
         }
-
         try {
             startConnection(sock, sid);
         } catch (IOException e) {

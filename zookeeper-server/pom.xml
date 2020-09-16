@@ -166,7 +166,7 @@
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
       <!--      <version>0.5.1</version>-->
-      <version>3.5.0</version>
+      <version>3.6.1</version>
       <!--      <scope>system</scope>-->
       <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
     </dependency>
@@ -358,7 +358,7 @@
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
               <!--              <version>0.5.1</version>-->
-              <version>3.6.1-SNAPSHOT</version>
+              <version>3.6.1</version>
               <!--              <version>3.5.0</version>-->
             </path>
           </annotationProcessorPaths>
@@ -370,16 +370,6 @@
             <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
             <!--            <arg>-Astubs=/object-construction-checker/stubs</arg>-->
           </compilerArgs>
-          <!--          <compilerArgs>-->
-          <!--            &lt;!&ndash; If using JDK 8, use only the argument immediately below. &ndash;&gt;-->
-          <!--            <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>-->
-          <!--            &lt;!&ndash; If using JDK 11, remove the argument above, remove the-->
-          <!--                 space in the one below, and uncomment it. &ndash;&gt;-->
-          <!--            &lt;!&ndash; <arg>-J- -add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg> &ndash;&gt;-->
-
-          <!--            &lt;!&ndash; Optionally, -Awarns turns type-checking errors into warnings. &ndash;&gt;-->
-          <!--            &lt;!&ndash; <arg>-Awarns</arg> &ndash;&gt;-->
-          <!--          </compilerArgs>-->
         </configuration>
       </plugin>
 
