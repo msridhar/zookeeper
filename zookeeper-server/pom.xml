@@ -357,9 +357,7 @@
             <path>
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
-              <!--              <version>0.5.1</version>-->
               <version>3.6.1</version>
-              <!--              <version>3.5.0</version>-->
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
@@ -367,8 +365,9 @@
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
             <!--            <arg>-Awarns</arg>-->
+<!--            <arg>-Astubs=object-construction-checker.jar/stub</arg>-->
             <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
-            <!--            <arg>-Astubs=/object-construction-checker/stubs</arg>-->
+<!--            <arg>-Astubs=/object-construction-checker/stubs</arg>-->
           </compilerArgs>
         </configuration>
       </plugin>

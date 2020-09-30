@@ -462,7 +462,7 @@ public class QuorumCnxManager {
 
     }
 
-    private boolean startConnection(Socket sock, Long sid) throws IOException {
+    private boolean startConnection(@Owning Socket sock, Long sid) throws IOException {
         DataOutputStream dout = null;
         DataInputStream din = null;
         LOG.debug("startConnection (myId:{} --> sid:{})", self.getId(), sid);

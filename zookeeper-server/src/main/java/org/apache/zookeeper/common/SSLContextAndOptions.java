@@ -82,7 +82,7 @@ public class SSLContextAndOptions {
         return configureSSLSocket((SSLSocket) sslContext.getSocketFactory().createSocket(), true);
     }
 
-    public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws IOException {
+    public SSLSocket createSSLSocket(@Owning Socket socket, byte[] pushbackBytes) throws IOException {
         SSLSocket sslSocket;
         if (pushbackBytes != null && pushbackBytes.length > 0) {
             sslSocket = (SSLSocket) sslContext.getSocketFactory()
