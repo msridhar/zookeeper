@@ -1162,7 +1162,7 @@ public class QuorumCnxManager {
          * @param sid
          *            Server identifier of remote peer
          */
-        SendWorker(Socket sock, Long sid) {
+        SendWorker(@Owning Socket sock, Long sid) {
             super("SendWorker:" + sid);
             this.sid = sid;
             this.sock = sock;
@@ -1334,7 +1334,7 @@ public class QuorumCnxManager {
         final DataInputStream din;
         final SendWorker sw;
 
-        RecvWorker(Socket sock, DataInputStream din, Long sid, SendWorker sw) {
+        RecvWorker(@Owning Socket sock, DataInputStream din, Long sid, SendWorker sw) {
             super("RecvWorker:" + sid);
             this.sid = sid;
             this.sock = sock;
