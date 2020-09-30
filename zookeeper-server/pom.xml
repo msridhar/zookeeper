@@ -362,8 +362,6 @@
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-            <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
-            <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
           </compilerArgs>
         </configuration>
       </plugin>
