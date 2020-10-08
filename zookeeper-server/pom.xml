@@ -166,7 +166,7 @@
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
       <!--      <version>0.5.1</version>-->
-      <version>3.6.1</version>
+      <version>3.7.0</version>
       <!--      <scope>system</scope>-->
       <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
     </dependency>
@@ -356,7 +356,7 @@
             <path>
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
-              <version>3.6.1</version>
+              <version>3.7.0</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
