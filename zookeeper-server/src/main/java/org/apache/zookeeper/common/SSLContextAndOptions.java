@@ -32,6 +32,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLSocket;
+
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +82,7 @@ public class SSLContextAndOptions {
         return configureSSLSocket((SSLSocket) sslContext.getSocketFactory().createSocket(), true);
     }
 
-    public SSLSocket createSSLSocket(Socket socket, byte[] pushbackBytes) throws IOException {
+    public SSLSocket createSSLSocket(@Owning Socket socket, byte[] pushbackBytes) throws IOException {
         SSLSocket sslSocket;
         if (pushbackBytes != null && pushbackBytes.length > 0) {
             sslSocket = (SSLSocket) sslContext.getSocketFactory()
@@ -119,7 +121,7 @@ public class SSLContextAndOptions {
         return handshakeDetectionTimeoutMillis;
     }
 
-    private SSLSocket configureSSLSocket(SSLSocket socket, boolean isClientSocket) {
+    private SSLSocket configureSSLSocket(@Owning SSLSocket socket, boolean isClientSocket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, isClientSocket);
         socket.setSSLParameters(sslParameters);
@@ -127,7 +129,7 @@ public class SSLContextAndOptions {
         return socket;
     }
 
-    private SSLServerSocket configureSSLServerSocket(SSLServerSocket socket) {
+    private SSLServerSocket configureSSLServerSocket(@Owning SSLServerSocket socket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, false);
         socket.setSSLParameters(sslParameters);

@@ -33,6 +33,8 @@ import java.nio.channels.SocketChannel;
 import javax.net.ssl.SSLSocket;
 import org.apache.zookeeper.common.X509Exception;
 import org.apache.zookeeper.common.X509Util;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +193,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @param allowInsecureConnection
          * @param prependableSocket
          */
-        private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, PrependableSocket prependableSocket) {
+        private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, @Owning PrependableSocket prependableSocket) {
             this.x509Util = x509Util;
             this.allowInsecureConnection = allowInsecureConnection;
             this.prependableSocket = prependableSocket;
@@ -279,7 +281,7 @@ public class UnifiedServerSocket extends ServerSocket {
             }
         }
 
-        private Socket getSocketAllowUnknownMode() {
+        @NotOwning private Socket getSocketAllowUnknownMode() {
             if (isSecureSocket()) {
                 return sslSocket;
             } else { // Note: mode is UNKNOWN or PLAINTEXT
@@ -293,7 +295,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @return the underlying socket, after the socket mode has been determined.
          * @throws IOException
          */
-        private Socket getSocket() throws IOException {
+        @NotOwning private Socket getSocket() throws IOException {
             if (!isModeKnown()) {
                 detectMode();
             }

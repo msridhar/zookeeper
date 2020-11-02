@@ -71,6 +71,7 @@ import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 import org.apache.zookeeper.server.util.ConfigUtils;
 import org.apache.zookeeper.util.CircularBlockingQueue;
 import org.apache.zookeeper.util.ServiceUtils;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -401,7 +402,6 @@ public class QuorumCnxManager {
             closeSocket(sock);
             return;
         }
-
         try {
             startConnection(sock, sid);
         } catch (IOException e) {
@@ -462,7 +462,7 @@ public class QuorumCnxManager {
 
     }
 
-    private boolean startConnection(Socket sock, Long sid) throws IOException {
+    private boolean startConnection(@Owning Socket sock, Long sid) throws IOException {
         DataOutputStream dout = null;
         DataInputStream din = null;
         LOG.debug("startConnection (myId:{} --> sid:{})", self.getId(), sid);
@@ -1162,7 +1162,7 @@ public class QuorumCnxManager {
          * @param sid
          *            Server identifier of remote peer
          */
-        SendWorker(Socket sock, Long sid) {
+        SendWorker(@Owning Socket sock, Long sid) {
             super("SendWorker:" + sid);
             this.sid = sid;
             this.sock = sock;
@@ -1334,7 +1334,7 @@ public class QuorumCnxManager {
         final DataInputStream din;
         final SendWorker sw;
 
-        RecvWorker(Socket sock, DataInputStream din, Long sid, SendWorker sw) {
+        RecvWorker(@Owning Socket sock, DataInputStream din, Long sid, SendWorker sw) {
             super("RecvWorker:" + sid);
             this.sid = sid;
             this.sock = sock;
