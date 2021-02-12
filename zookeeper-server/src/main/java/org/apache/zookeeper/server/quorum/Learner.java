@@ -64,9 +64,12 @@ import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
-import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
 
 /**
  * This class is the superclass of two of the three main actors in a ZK
@@ -88,7 +91,7 @@ public class Learner {
 
     protected BufferedOutputStream bufferedOutput;
 
-    protected Socket sock;
+    protected @Owning Socket sock;
     protected MultipleAddresses leaderAddr;
     protected AtomicBoolean sockBeingClosed = new AtomicBoolean(false);
 
@@ -299,6 +302,7 @@ public class Learner {
      * Overridable helper method to simply call sock.connect(). This can be
      * overriden in tests to fake connection success/failure for connectToLeader.
      */
+    @ResetMustCall("#1")
     protected void sockConnect(Socket sock, InetSocketAddress addr, int timeout) throws IOException {
         sock.connect(addr, timeout);
     }
@@ -311,6 +315,8 @@ public class Learner {
      * @throws IOException - if the socket connection fails on the 5th attempt
      * if there is an authentication failure while connecting to leader
      */
+    @ResetMustCall("this")
+    @SuppressWarnings("required.method.not.called") // FP: this applies to the assignments at the end of the method to leaderIs etc. These are all MCC with the `sock` field, which is owning, so it doesn't matter if they aren't closed.
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 
         this.leaderAddr = multiAddr;
@@ -341,11 +347,14 @@ public class Learner {
                 LOG.error("Interrupted while terminating LeaderConnector executor.", ie);
             }
         }
-
-        if (socket.get() == null) {
+        Socket socketGet = socket.get();
+        if (socketGet == null) {
             throw new IOException("Failed connect to " + multiAddr);
         } else {
-            sock = socket.get();
+            // TP: the field sock will be overwritten here, causing a leak if a connection was already established.
+            // I think this assignment should be guarded by a check that either sock is null/closed, or by some code
+            // that calls one of the shutdown methods, but I'm not sure which is correct.
+            sock = socketGet;
             sockBeingClosed.set(false);
         }
 
@@ -372,6 +381,7 @@ public class Learner {
         }
 
         @Override
+        @SuppressWarnings("required.method.not.called") // FP: sock is either assigned into the container AtomicReference, which becomes the owner, or is closed. Needs support for generic containers.
         public void run() {
             try {
                 Thread.currentThread().setName("LeaderConnector-" + address);
@@ -393,6 +403,7 @@ public class Learner {
             }
         }
 
+        @SuppressWarnings("required.method.not.called") // TP: see below
         private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
             Socket sock = createSocket();
 
@@ -421,6 +432,8 @@ public class Learner {
                     if (self.isSslQuorum()) {
                         ((SSLSocket) sock).startHandshake();
                     }
+                    // TP: the catch block doesn't close sock in the event that this call fails, and sockConnect above
+                    // has already connected the socket. 
                     sock.setTcpNoDelay(nodelay);
                     break;
                 } catch (IOException e) {
@@ -836,6 +849,8 @@ public class Learner {
     /**
      * Shutdown the Peer
      */
+    @SuppressWarnings("contracts.postcondition.not.satisfied") // FP: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     public void shutdown() {
         self.setZooKeeperServer(null);
         self.closeAllConnections();
@@ -870,6 +885,7 @@ public class Learner {
         }
     }
 
+    @SuppressWarnings("missing.reset.mustcall") // FP: reassignment of non-final owning field to null
     void closeSockSync() {
         try {
             long startTime = Time.currentElapsedTime();

@@ -43,6 +43,7 @@ public class ZKAuditProvider {
         }
     }
 
+    @SuppressWarnings("mustcall") // FP: Class.forName bug
     private static AuditLogger getAuditLogger() {
         String auditLoggerClass = System.getProperty(AUDIT_IMPL_CLASS);
         if (auditLoggerClass == null) {

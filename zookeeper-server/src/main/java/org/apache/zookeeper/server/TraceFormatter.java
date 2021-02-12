@@ -33,6 +33,7 @@ public class TraceFormatter {
      * @param args
      * @throws IOException
      */
+    @SuppressWarnings("required.method.not.called") // TP: fc is never closed; seems to rely on program exit to be freed
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("USAGE: TraceFormatter trace_file");

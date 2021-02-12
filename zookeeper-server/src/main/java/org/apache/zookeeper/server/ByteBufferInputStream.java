@@ -24,10 +24,15 @@ import java.nio.ByteBuffer;
 import org.apache.jute.BinaryInputArchive;
 import org.apache.jute.Record;
 
+import org.checkerframework.checker.mustcall.qual.MustCall;
+
+@SuppressWarnings("inconsistent.mustcall.subtype") // FP: this input stream doesn't control a resource
+@MustCall({})
 public class ByteBufferInputStream extends InputStream {
 
     ByteBuffer bb;
 
+    @SuppressWarnings("super.invocation.invalid") // FP: this input stream doesn't control a resource
     public ByteBufferInputStream(ByteBuffer bb) {
         this.bb = bb;
     }

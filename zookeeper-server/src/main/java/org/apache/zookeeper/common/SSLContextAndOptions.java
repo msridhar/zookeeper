@@ -32,10 +32,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLSocket;
-
-import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
 
 /**
  * Wrapper class for an SSLContext + some config options that can't be set on the context when it is created but
@@ -78,7 +80,8 @@ public class SSLContextAndOptions {
         return sslContext;
     }
 
-    public SSLSocket createSSLSocket() throws IOException {
+    @SuppressWarnings("required.method.not.called") // FP: configureSSLSocket should take ownership TODO: investigate this
+    public @MustCall({}) SSLSocket createSSLSocket() throws IOException {
         return configureSSLSocket((SSLSocket) sslContext.getSocketFactory().createSocket(), true);
     }
 
@@ -93,7 +96,7 @@ public class SSLContextAndOptions {
         return configureSSLSocket(sslSocket, false);
     }
 
-    public SSLServerSocket createSSLServerSocket() throws IOException {
+    public @MustCall({}) SSLServerSocket createSSLServerSocket() throws IOException {
         SSLServerSocket sslServerSocket = (SSLServerSocket) sslContext.getServerSocketFactory().createServerSocket();
         return configureSSLServerSocket(sslServerSocket);
     }
@@ -121,7 +124,8 @@ public class SSLContextAndOptions {
         return handshakeDetectionTimeoutMillis;
     }
 
-    private SSLSocket configureSSLSocket(@Owning SSLSocket socket, boolean isClientSocket) {
+    @SuppressWarnings("mustcall") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
+    private @PolyMustCall SSLSocket configureSSLSocket(@Owning @PolyMustCall SSLSocket socket, boolean isClientSocket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, isClientSocket);
         socket.setSSLParameters(sslParameters);
@@ -129,7 +133,8 @@ public class SSLContextAndOptions {
         return socket;
     }
 
-    private SSLServerSocket configureSSLServerSocket(@Owning SSLServerSocket socket) {
+    @SuppressWarnings("mustcall") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
+    private @PolyMustCall SSLServerSocket configureSSLServerSocket(@Owning @PolyMustCall SSLServerSocket socket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, false);
         socket.setSSLParameters(sslParameters);

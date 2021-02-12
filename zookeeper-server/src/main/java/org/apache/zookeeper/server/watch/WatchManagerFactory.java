@@ -32,6 +32,7 @@ public class WatchManagerFactory {
 
     public static final String ZOOKEEPER_WATCH_MANAGER_NAME = "zookeeper.watchManagerName";
 
+    @SuppressWarnings("mustcall") // FP: Class.forName bug
     public static IWatchManager createWatchManager() throws IOException {
         String watchManagerName = System.getProperty(ZOOKEEPER_WATCH_MANAGER_NAME);
         if (watchManagerName == null) {

@@ -24,6 +24,10 @@ import java.io.PushbackInputStream;
 import java.net.Socket;
 import java.net.SocketImpl;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 public class PrependableSocket extends Socket {
 
     private PushbackInputStream pushbackInputStream;
@@ -33,7 +37,8 @@ public class PrependableSocket extends Socket {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    @SuppressWarnings("mustcall") // FP: MCC verification
+    public @MustCallChoice InputStream getInputStream(@MustCallChoice PrependableSocket this) throws IOException {
         if (pushbackInputStream == null) {
             return super.getInputStream();
         }
@@ -49,6 +54,7 @@ public class PrependableSocket extends Socket {
      * @param length number of bytes to prepend.
      * @throws IOException if this method was already called on the socket instance, or if super.getInputStream() throws.
      */
+    @SuppressWarnings("required.method.not.called") // FP: InputStream is MCC with this
     public void prependToInputStream(byte[] bytes, int offset, int length) throws IOException {
         if (length == 0) {
             return; // nothing to prepend

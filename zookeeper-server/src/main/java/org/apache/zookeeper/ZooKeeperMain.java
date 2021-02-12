@@ -279,6 +279,7 @@ public class ZooKeeperMain {
         this.zk = zk;
     }
 
+    @SuppressWarnings("required.method.not.called") // FP: reflection
     void run() throws IOException, InterruptedException {
         if (cl.getCommand() == null) {
             System.out.println("Welcome to ZooKeeper!");

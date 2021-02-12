@@ -83,6 +83,9 @@ import org.apache.zookeeper.server.util.ZxidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+
 /**
  * This class manages the quorum protocol. There are three states this server
  * can be in:
@@ -602,9 +605,9 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         return shouldUsePortUnification;
     }
 
-    private final QuorumX509Util x509Util;
+    private final @Owning QuorumX509Util x509Util;
 
-    QuorumX509Util getX509Util() {
+    @NotOwning QuorumX509Util getX509Util() {
         return x509Util;
     }
 
@@ -1332,6 +1335,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     boolean shuttingDownLE = false;
 
     @Override
+    @SuppressWarnings("reset.not.owning") // FP: ResetMustCall needs to be repeatable
     public void run() {
         updateThreadName();
 

@@ -43,6 +43,10 @@ import org.apache.zookeeper.server.ZooKeeperSaslServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 public class Login {
 
     private static final String KINIT_COMMAND_DEFAULT = "/usr/bin/kinit";
@@ -114,7 +118,7 @@ public class Login {
                 }
             }
             if (entry.getOptions().get("principal") != null) {
-                principal = (String) entry.getOptions().get("principal");
+                principal = (@MustCall({}) String) entry.getOptions().get("principal");
             }
             break;
         }

@@ -36,6 +36,10 @@ import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 /**
  * This class has the control logic for the Follower.
  */
@@ -45,7 +49,7 @@ public class Follower extends Learner {
     // This is the same object as this.zk, but we cache the downcast op
     final FollowerZooKeeperServer fzk;
 
-    ObserverMaster om;
+    @Owning ObserverMaster om;
 
     Follower(QuorumPeer self, FollowerZooKeeperServer zk) {
         this.self = self;
@@ -67,6 +71,7 @@ public class Follower extends Learner {
      *
      * @throws InterruptedException
      */
+    @ResetMustCall("this")
     void followLeader() throws InterruptedException {
         self.end_fle = Time.currentElapsedTime();
         long electionTimeTaken = self.end_fle - self.start_fle;
@@ -288,6 +293,7 @@ public class Follower extends Learner {
     }
 
     @Override
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     public void shutdown() {
         LOG.info("shutdown Follower");
         super.shutdown();

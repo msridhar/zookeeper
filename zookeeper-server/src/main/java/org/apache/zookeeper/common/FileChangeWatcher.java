@@ -65,6 +65,7 @@ public final class FileChangeWatcher {
      *                 and <code>event.context()</code> will return the filename relative to <code>dirPath</code>.
      * @throws IOException if there is an error creating the WatchService.
      */
+    @SuppressWarnings("required.method.not.called") // FP: I'm not familiar with these APIs, but as far as I can tell they don't actually need to be closed?
     public FileChangeWatcher(Path dirPath, Consumer<WatchEvent<?>> callback) throws IOException {
         FileSystem fs = dirPath.getFileSystem();
         WatchService watchService = fs.newWatchService();
