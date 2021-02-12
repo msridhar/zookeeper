@@ -3021,6 +3021,7 @@ public class ZooKeeper implements AutoCloseable {
         return cnxn.sendThread.getClientCnxnSocket().getLocalSocketAddress();
     }
 
+    @SuppressWarnings("mustcall") // FP: Class.forName bug
     private ClientCnxnSocket getClientCnxnSocket() throws IOException {
         String clientCnxnSocketName = getClientConfig().getProperty(ZKClientConfig.ZOOKEEPER_CLIENT_CNXN_SOCKET);
         if (clientCnxnSocketName == null) {

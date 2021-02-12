@@ -26,6 +26,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
+
 /*
  * This code is originally from HDFS, see the similarly named files there
  * in case of bug fixing, history, etc...
@@ -52,7 +54,8 @@ public class AtomicFileOutputStream extends FilterOutputStream {
     private final File origFile;
     private final File tmpFile;
 
-    public AtomicFileOutputStream(File f) throws FileNotFoundException {
+    @SuppressWarnings({"mustcall", "required.method.not.called"}) // FP: MCC verification :: FP: super() constructor takes ownership
+    public @MustCallChoice AtomicFileOutputStream(@MustCallChoice File f) throws FileNotFoundException {
         // Code unfortunately must be duplicated below since we can't assign
         // anything
         // before calling super

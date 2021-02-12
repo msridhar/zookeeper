@@ -32,6 +32,7 @@ public abstract class MetricsProviderBootstrap {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetricsProviderBootstrap.class);
 
+    @SuppressWarnings("mustcall") // FP: reflection
     public static MetricsProvider startMetricsProvider(
         String metricsProviderClassName,
         Properties configuration) throws MetricsProviderLifeCycleException {

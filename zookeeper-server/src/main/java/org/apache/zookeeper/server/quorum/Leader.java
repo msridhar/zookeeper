@@ -305,6 +305,7 @@ public class Leader extends LearnerMaster {
         this.zk = zk;
     }
 
+    @SuppressWarnings("required.method.not.called") // FP: we need to support generic containers such as Optional taking ownership
     Optional<ServerSocket> createServerSocket(InetSocketAddress address, boolean portUnification, boolean sslQuorum) {
         ServerSocket serverSocket;
         try {
@@ -505,6 +506,7 @@ public class Leader extends LearnerMaster {
                 }
             }
 
+            @SuppressWarnings("required.method.not.called") // FP: call to close is controlled by the error boolean. Validated by hand.
             private void acceptConnections() throws IOException {
                 Socket socket = null;
                 boolean error = false;
@@ -824,6 +826,7 @@ public class Leader extends LearnerMaster {
         isShutdown = true;
     }
 
+    @SuppressWarnings("required.method.not.called") // FP: need support for owning lists
     synchronized void closeSockets() {
        for (ServerSocket serverSocket : serverSockets) {
            if (!serverSocket.isClosed()) {

@@ -46,6 +46,10 @@ import org.apache.zookeeper.server.quorum.auth.QuorumAuthServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 /**
  * Used by Followers to host Observers. This reduces the network load on the Leader process by pushing
  * the responsibility for keeping Observers in sync off the leading peer.
@@ -62,6 +66,7 @@ import org.slf4j.LoggerFactory;
  *
  * The logic is quite a bit simpler than the corresponding logic in Leader because it only hosts observers.
  */
+@MustCall("stop")
 public class ObserverMaster extends LearnerMaster implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObserverMaster.class);
@@ -131,7 +136,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
     }
 
     private Thread thread;
-    private ServerSocket ss;
+    private @Owning ServerSocket ss;
     private boolean listenerRunning;
     private ScheduledExecutorService pinger;
 
@@ -424,6 +429,8 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         sendPacket(informAndActivateQP);
     }
 
+    @SuppressWarnings("required.method.not.called") // FP there is implicitly a check that ss is null before the assignments: `thread` is checked for null, and if it isn't null then this routine returns early, and only this routine assigns both the socket and thread.
+    @ResetMustCall("this")
     public synchronized void start() throws IOException {
         if (thread != null && thread.isAlive()) {
             return;
@@ -451,6 +458,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         pinger.scheduleAtFixedRate(ping, self.tickTime / 2, self.tickTime / 2, TimeUnit.MILLISECONDS);
     }
 
+    @SuppressWarnings("required.method.not.called") // TP: see below
     public void run() {
         ServerSocket ss;
         synchronized (this) {
@@ -458,6 +466,8 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         }
         while (listenerRunning) {
             try {
+                // TP: if s.setSoTimeout throws an exception (e.g. due to a closed client, etc.),
+                // then this socket is leaked. accept()'s result is definitely connected.
                 Socket s = ss.accept();
 
                 // start with the initLimit, once the ack is processed
@@ -480,17 +490,19 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
          */
     }
 
+    @SuppressWarnings("contracts.postcondition.not.satisfied") // FP: ???
+    @EnsuresCalledMethods(value="ss", methods="close")
     public synchronized void stop() {
-        listenerRunning = false;
-        if (pinger != null) {
-            pinger.shutdownNow();
-        }
         if (ss != null) {
             try {
                 ss.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        listenerRunning = false;
+        if (pinger != null) {
+            pinger.shutdownNow();
         }
         for (LearnerHandler lh : activeObservers) {
             lh.shutdown();
