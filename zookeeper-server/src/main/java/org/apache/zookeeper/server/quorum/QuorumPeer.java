@@ -83,8 +83,9 @@ import org.apache.zookeeper.server.util.ZxidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.NotOwning;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
 
 /**
  * This class manages the quorum protocol. There are three states this server
@@ -1335,7 +1336,9 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     boolean shuttingDownLE = false;
 
     @Override
-    @SuppressWarnings("reset.not.owning") // FP: ResetMustCall needs to be repeatable
+    @ResetMustCall("this.observer")
+    @ResetMustCall("this.follower")
+    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: the corresponding ResetMustCall annotations are here, so why doesn't this work?
     public void run() {
         updateThreadName();
 

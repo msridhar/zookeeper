@@ -118,7 +118,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             this.selector = Selector.open();
         }
 
-        @SuppressWarnings("required.method.not.called") // FP: I'm not sure why we warn here. selector is an owning field, and closing it is handled elsewhere.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: I'm not sure why we warn here. selector is an owning field, and closing it is handled elsewhere.
         public void wakeupSelector() {
             selector.wakeup();
         }
@@ -186,7 +186,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             selectorIterator = this.selectorThreads.iterator();
         }
 
-        @SuppressWarnings("required.method.not.called") // FP: MCC with non-owning field
         public void run() {
             try {
                 while (!stopped && !acceptSocket.socket().isClosed()) {
@@ -266,7 +265,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          *
          * @return whether was able to accept a connection or not
          */
-        @SuppressWarnings("required.method.not.called") // FP: sc will either be passed to addAcceptedConnection, which will return true if it takes ownership, or an exception will be thrown and the catch block will close it. The use of exceptional control flow and our inability to model a method that takes ownership only if it returns true prevent us from verifying this.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sc will either be passed to addAcceptedConnection, which will return true if it takes ownership, or an exception will be thrown and the catch block will close it. The use of exceptional control flow and our inability to model a method that takes ownership only if it returns true prevent us from verifying this.
         private boolean doAccept() {
             boolean accepted = false;
             SocketChannel sc = null;
@@ -460,7 +459,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          * Iterate over the queue of accepted connections that have been
          * assigned to this thread but not yet placed on the selector.
          */
-        @SuppressWarnings("required.method.not.called") // FP: each value of accepted is either: 1) based to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why this doesn't verify with the message "regular method exit"; I think there must be some imprecision in the CFG.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: each value of accepted is either: 1) based to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why this doesn't verify with the message "regular method exit"; I think there must be some imprecision in the CFG.
         private void processAcceptedConnections() {
             SocketChannel accepted;
             while (!stopped && (accepted = acceptedQueue.poll()) != null) {
@@ -631,7 +630,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     private final Set<SelectorThread> selectorThreads = new HashSet<SelectorThread>();
 
     @Override
-    @SuppressWarnings("required.method.not.called") // TP: see below
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
     @ResetMustCall("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
@@ -696,7 +695,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     @Override
     @ResetMustCall("this")
-    @SuppressWarnings("required.method.not.called") // TP: ss is bound (making it a resource that must be closed) before configureBlocking, which can fail, is called.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: ss is bound (making it a resource that must be closed) before configureBlocking, which can fail, is called.
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;
         try {
@@ -768,13 +767,11 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     }
 
     @Override
-    @SuppressWarnings("required.method.not.called") // FP: MCC with owning field
     public InetSocketAddress getLocalAddress() {
         return (InetSocketAddress) ss.socket().getLocalSocketAddress();
     }
 
     @Override
-    @SuppressWarnings("required.method.not.called") // FP: MCC with owning field
     public int getLocalPort() {
         return ss.socket().getLocalPort();
     }

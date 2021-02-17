@@ -194,7 +194,6 @@ public class QuorumCnxManager {
     /*
      * Socket factory, allowing the injection of custom socket implementations for testing
      */
-    @SuppressWarnings("required.method.not.called") // FP: lambda support
     static final Supplier<Socket> DEFAULT_SOCKET_FACTORY = () -> new Socket();
     private static Supplier<Socket> SOCKET_FACTORY = DEFAULT_SOCKET_FACTORY;
     static void setSocketFactory(Supplier<Socket> factory) {
@@ -375,7 +374,7 @@ public class QuorumCnxManager {
      * If this server has initiated the connection, then it gives up on the
      * connection if it loses challenge. Otherwise, it keeps the connection.
      */
-    @SuppressWarnings("required.method.not.called") // FP: SOCKET_FACTORY.get() is an unconnected socket, but we don't have a way to specify that given that it's a Supplier.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: SOCKET_FACTORY.get() is an unconnected socket, but we don't have a way to specify that given that it's a Supplier.
     public void initiateConnection(final MultipleAddresses electionAddr, final Long sid) {
         Socket sock = null;
         try {
@@ -587,7 +586,7 @@ public class QuorumCnxManager {
     private class QuorumConnectionReceiverThread extends ZooKeeperThread {
 
         private final Socket sock;
-        @SuppressWarnings("required.method.not.called") // FP: this is a thread, which will definitely have run() called upon it. This method takes the socket and puts it in a field temporarily; when run is called, sock is passed to receiveConnection(), which takes ownership.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this is a thread, which will definitely have run() called upon it. This method takes the socket and puts it in a field temporarily; when run is called, sock is passed to receiveConnection(), which takes ownership.
         QuorumConnectionReceiverThread(final @Owning Socket sock) {
             super("QuorumConnectionReceiverThread-" + sock.getRemoteSocketAddress());
             this.sock = sock;
@@ -600,7 +599,7 @@ public class QuorumCnxManager {
 
     }
 
-    @SuppressWarnings("required.method.not.called") // TP: see below
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
     private void handleConnection(@Owning Socket sock, DataInputStream din) throws IOException {
         Long sid = null, protocolVersion = null;
         MultipleAddresses electionAddr = null;
@@ -1068,7 +1067,7 @@ public class QuorumCnxManager {
             /**
              * Sleeps on accept().
              */
-            @SuppressWarnings("required.method.not.called") // FP: this method is private, and only called on new instances that don't have a nonnull ServerSocket. The loop in which serverSocket is assigned is safe, because exceptions are caught and close() is called before the loop goes around again.
+            @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this method is private, and only called on new instances that don't have a nonnull ServerSocket. The loop in which serverSocket is assigned is safe, because exceptions are caught and close() is called before the loop goes around again.
             @ResetMustCall("this")
             private void acceptConnections() {
                 int numRetries = 0;
@@ -1178,7 +1177,7 @@ public class QuorumCnxManager {
          * @param sid
          *            Server identifier of remote peer
          */
-        @SuppressWarnings({"missing.reset.mustcall", "required.method.not.called"}) // FP: this is a constructor, but our analysis is treating it as an instance method
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) // FP: this is a constructor, but our analysis is treating it as an instance method
         SendWorker(@Owning Socket sock, Long sid) {
             super("SendWorker:" + sid);
             this.sid = sid;
@@ -1207,7 +1206,7 @@ public class QuorumCnxManager {
             return recvWorker;
         }
 
-        @SuppressWarnings("contracts.postcondition.not.satisfied") // FP: closeSocket also has EnsuresCalledMethods, but apparently they don't chain? IDK, this should verify. Maybe a viewpoint adaptation problem?
+        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket also has EnsuresCalledMethods, but apparently they don't chain? IDK, this should verify. Maybe a viewpoint adaptation problem?
         @EnsuresCalledMethods(value="this.sock", methods="close")
         synchronized boolean finish() {
             LOG.debug("Calling SendWorker.finish for {}", sid);
@@ -1345,10 +1344,11 @@ public class QuorumCnxManager {
      * Thread to receive messages. Instance waits on a socket read. If the
      * channel breaks, then removes itself from the pool of receivers.
      */
+    @MustCall("run")
     class RecvWorker extends ZooKeeperThread {
 
         Long sid;
-        Socket sock;
+        final @Owning Socket sock;
         volatile boolean running = true;
         final DataInputStream din;
         final SendWorker sw;
@@ -1390,6 +1390,7 @@ public class QuorumCnxManager {
         }
 
         @Override
+        @EnsuresCalledMethods(value="sock", methods="close")
         public void run() {
             threadCnt.incrementAndGet();
             try {

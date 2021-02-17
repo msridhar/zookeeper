@@ -258,7 +258,7 @@ public class SnapshotComparer {
    * @param file the snapshot file
    * @throws Exception
    */
-  @SuppressWarnings("required.method.not.called") // TP: snapIS has a file descriptor, and is never closed.
+  @SuppressWarnings("objectconstruction:required.method.not.called") // TP: snapIS has a file descriptor, and is never closed.
   private static DataTree getSnapshot(File file) throws Exception {
     FileSnap fileSnap = new FileSnap(null);
     DataTree dataTree = new DataTree();

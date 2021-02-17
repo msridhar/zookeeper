@@ -429,7 +429,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         sendPacket(informAndActivateQP);
     }
 
-    @SuppressWarnings("required.method.not.called") // FP there is implicitly a check that ss is null before the assignments: `thread` is checked for null, and if it isn't null then this routine returns early, and only this routine assigns both the socket and thread.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP there is implicitly a check that ss is null before the assignments: `thread` is checked for null, and if it isn't null then this routine returns early, and only this routine assigns both the socket and thread.
     @ResetMustCall("this")
     public synchronized void start() throws IOException {
         if (thread != null && thread.isAlive()) {
@@ -458,7 +458,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         pinger.scheduleAtFixedRate(ping, self.tickTime / 2, self.tickTime / 2, TimeUnit.MILLISECONDS);
     }
 
-    @SuppressWarnings("required.method.not.called") // TP: see below
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
     public void run() {
         ServerSocket ss;
         synchronized (this) {
@@ -490,7 +490,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
          */
     }
 
-    @SuppressWarnings("contracts.postcondition.not.satisfied") // FP: ???
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: ???
     @EnsuresCalledMethods(value="ss", methods="close")
     public synchronized void stop() {
         if (ss != null) {

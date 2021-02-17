@@ -150,7 +150,6 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     long lastZxidSeen;
-    @SuppressWarnings("required.method.not.called") // FP: initializers for owning fields
     volatile @Owning BufferedOutputStream logStream = null;
     volatile OutputArchive oa;
     volatile FileOutputStream fos = null;
@@ -237,7 +236,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * rollover the current log file to a new one.
      * @throws IOException
      */
-    @SuppressWarnings({"required.method.not.called", "missing.reset.mustcall"}) // TP: see below
+    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // TP: see below
     public synchronized void rollLog() throws IOException {
         if (logStream != null) {
             this.logStream.flush();
@@ -255,7 +254,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * @throws IOException
      */
     @EnsuresCalledMethods(value="logStream", methods="close")
-    @SuppressWarnings("contracts.postcondition.not.satisfied") // FP: ???
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: ???
     public synchronized void close() throws IOException {
         if (logStream != null) {
             logStream.close();
@@ -277,7 +276,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     @Override
-    @SuppressWarnings("required.method.not.called") // see comment below. This warning suppresses the related warnings.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // see comment below. This warning suppresses the related warnings.
     @ResetMustCall("this")
     public synchronized boolean append(TxnHeader hdr, Record txn, TxnDigest digest) throws IOException {
         if (hdr == null) {
@@ -402,7 +401,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * commit the logs. make sure that everything hits the
      * disk
      */
-    @SuppressWarnings("required.method.not.called") // FP: requires container support for list of owners
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners
     public synchronized void commit() throws IOException {
         if (logStream != null) {
             logStream.flush();
@@ -495,7 +494,7 @@ public class FileTxnLog implements TxnLog, Closeable {
             }
             long pos = input.getPosition();
             // now, truncate at the current position
-            @SuppressWarnings("required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed.
+            @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed.
             RandomAccessFile raf = new RandomAccessFile(itr.logFile, "rw");
             raf.setLength(pos);
             raf.close();
@@ -659,7 +658,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          *        a given zxid
          * @throws IOException
          */
-        @SuppressWarnings("reset.not.owning") // FP: ResetMustCall("this") method called by constructor
+        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: ResetMustCall("this") method called by constructor
         public FileTxnIterator(File logDir, long zxid, boolean fastForward) throws IOException {
             this.logDir = logDir;
             this.zxid = zxid;
@@ -782,7 +781,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @return true if there is more transactions to be read
          * false if not.
          */
-        @SuppressWarnings({"missing.reset.mustcall", "reset.not.owning"}) // FP: RMC required on assigning null
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:reset.not.owning"}) // FP: RMC required on assigning null
         public boolean next() throws IOException {
             if (ia == null) {
                 return false;

@@ -47,7 +47,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientCnxnSocketNIO.class);
 
-    @SuppressWarnings("required.method.not.called") // FP: initializer
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: initializer
     private final @Owning Selector selector = Selector.open();
 
     private SelectionKey sockKey;
@@ -245,7 +245,6 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
      * @return the created socket channel
      * @throws IOException
      */
-    @SuppressWarnings("required.method.not.called") // FP: ZookeeperReport6.java
     @MustCall({}) SocketChannel createSock() throws IOException {
         SocketChannel sock;
         sock = SocketChannel.open();
@@ -310,7 +309,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
         return localSocketAddress;
     }
 
-    @SuppressWarnings("required.method.not.called") // FP: MCC with field
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: MCC with field
     private void updateSocketAddresses() {
         Socket socket = ((SocketChannel) sockKey.channel()).socket();
         localSocketAddress = socket.getLocalSocketAddress();
@@ -327,7 +326,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
         wakeupCnxn();
     }
 
-    @SuppressWarnings("required.method.not.called") // FP: MCC with owning field
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: MCC with owning field
     private synchronized void wakeupCnxn() {
         selector.wakeup();
     }

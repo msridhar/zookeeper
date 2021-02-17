@@ -197,7 +197,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @param allowInsecureConnection
          * @param prependableSocket
          */
-        @SuppressWarnings({"missing.reset.mustcall","required.method.not.called"}) // FP constructor treated as instance method by our analysis.
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall","objectconstruction:required.method.not.called"}) // FP constructor treated as instance method by our analysis.
         private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, @Owning PrependableSocket prependableSocket) {
             this.x509Util = x509Util;
             this.allowInsecureConnection = allowInsecureConnection;
@@ -236,7 +236,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * accept() thread if possible.
          * @throws IOException
          */
-        @SuppressWarnings({"required.method.not.called", "missing.reset.mustcall"}) // FP: MCC with owning field :: FP: this method is called at most once, so while it technically meets the criteria for resetting, it can't actually reset; it's used in a cached way, so actually writing reset must call here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
+        @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // FP: MCC with owning field :: FP: this method is called at most once, so while it technically meets the criteria for resetting, it can't actually reset; it's used in a cached way, so actually writing reset must call here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
         private void detectMode() throws IOException {
             byte[] litmus = new byte[5];
             int oldTimeout = -1;

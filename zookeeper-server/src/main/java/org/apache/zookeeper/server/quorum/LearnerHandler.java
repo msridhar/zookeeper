@@ -457,7 +457,6 @@ public @MustCall("shutdown") class LearnerHandler extends ZooKeeperThread {
      * also listen to new connections from new peers.
      */
     @Override
-    @SuppressWarnings("required.method.not.called") // FP bufferedOutput is just a view of sock, which is the owning pointer to the resource. We warned about the BufferedOutputStream that's assigned to bufferedOutput, even though it's MCC with sock.
     public void run() {
         try {
             learnerMaster.addLearnerHandler(this);

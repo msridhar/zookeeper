@@ -54,7 +54,7 @@ public class AtomicFileOutputStream extends FilterOutputStream {
     private final File origFile;
     private final File tmpFile;
 
-    @SuppressWarnings({"mustcall", "required.method.not.called"}) // FP: MCC verification :: FP: super() constructor takes ownership
+    @SuppressWarnings({"mustcall", "objectconstruction:required.method.not.called"}) // FP: MCC verification :: FP: super() constructor takes ownership
     public @MustCallChoice AtomicFileOutputStream(@MustCallChoice File f) throws FileNotFoundException {
         // Code unfortunately must be duplicated below since we can't assign
         // anything
@@ -76,6 +76,7 @@ public class AtomicFileOutputStream extends FilterOutputStream {
     }
 
     @Override
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: even when sync() throws an exception, this code definitely closes out. However, we can't prove that because it's controlled by the success boolean.
     public void close() throws IOException {
         boolean triedToClose = false, success = false;
         try {

@@ -157,7 +157,6 @@ public abstract class ServerCnxnFactory {
 
     public abstract void closeAll(ServerCnxn.DisconnectReason reason);
 
-    @SuppressWarnings("mustcall") // FP: class.forName() bug
     public static ServerCnxnFactory createFactory() throws IOException {
         String serverCnxnFactoryName = System.getProperty(ZOOKEEPER_SERVER_CNXN_FACTORY);
         if (serverCnxnFactoryName == null) {
