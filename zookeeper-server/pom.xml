@@ -391,6 +391,7 @@
             <arg>-AcheckMustCall</arg>
             <!--arg>-AonlyUses=^java\.</arg-->
             <arg>-AcountMustCall</arg>
+            <arg>-AnoResourceAliases</arg>
             <arg>-ArequirePrefixInWarningSuppressions</arg>
             <arg>-AwarnUnneededSuppressions</arg>
           </compilerArgs>
