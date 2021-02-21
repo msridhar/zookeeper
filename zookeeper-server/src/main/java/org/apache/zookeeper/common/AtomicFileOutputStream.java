@@ -54,8 +54,7 @@ public class AtomicFileOutputStream extends FilterOutputStream {
     private final File origFile;
     private final File tmpFile;
 
-    @SuppressWarnings({"mustcall", "objectconstruction:required.method.not.called"}) // FP: MCC verification :: FP: super() constructor takes ownership
-    public @MustCallChoice AtomicFileOutputStream(@MustCallChoice File f) throws FileNotFoundException {
+    public AtomicFileOutputStream(File f) throws FileNotFoundException {
         // Code unfortunately must be duplicated below since we can't assign
         // anything
         // before calling super

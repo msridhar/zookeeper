@@ -74,6 +74,7 @@ public class UnifiedServerSocket extends ServerSocket {
      * @param allowInsecureConnection if true, accept plaintext connections, otherwise close them.
      * @throws IOException if {@link ServerSocket#ServerSocket()} throws.
      */
+    @SuppressWarnings("mustcall:inconsistent.constructor.type") // FP: unconnected socket constructor
     public @MustCall({}) UnifiedServerSocket(X509Util x509Util, boolean allowInsecureConnection) throws IOException {
         super();
         this.x509Util = x509Util;
@@ -336,6 +337,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @ResetMustCall("this")
+        @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall:mustcall.not.parseable", "objectconstruction:mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this
         public void connect(SocketAddress endpoint) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint);
         }
@@ -345,6 +347,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @ResetMustCall("this")
+        @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall:mustcall.not.parseable", "objectconstruction:mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this
         public void connect(SocketAddress endpoint, int timeout) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint, timeout);
         }
@@ -354,6 +357,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @ResetMustCall("this")
+        @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this  
         public void bind(SocketAddress bindpoint) throws IOException {
             getSocketAllowUnknownMode().bind(bindpoint);
         }
@@ -639,6 +643,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#isClosed()}. Calling this method does not trigger mode detection.
          */
         @Override
+        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this
         public boolean isClosed() {
             return getSocketAllowUnknownMode().isClosed();
         }

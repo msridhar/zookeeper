@@ -567,7 +567,6 @@ public class FileTxnLog implements TxnLog, Closeable {
 
         long position;
 
-        @SuppressWarnings("mustcall") // FP: MCC verification
         protected @MustCallChoice PositionInputStream(@MustCallChoice InputStream in) {
             super(in);
             position = 0;

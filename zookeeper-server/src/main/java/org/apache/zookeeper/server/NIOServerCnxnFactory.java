@@ -630,7 +630,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     private final Set<SelectorThread> selectorThreads = new HashSet<SelectorThread>();
 
     @Override
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
+    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: even though ss is bound before the call to configureBlocking, which could throw an exception, this method rethrows that exception, where it can be caught by the caller. That caller is then responsible for closing ss, which has already been assigned into its field - so no reference to it is lost.
     @ResetMustCall("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
@@ -679,7 +679,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
         } else {
             ss.socket().bind(addr, listenBacklog);
         }
-        // TP: the socket is bound, but configureBlocking can throw a SocketException.
         ss.configureBlocking(false);
         acceptThread = new AcceptThread(ss, addr, selectorThreads);
     }
@@ -695,7 +694,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     @Override
     @ResetMustCall("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: ss is bound (making it a resource that must be closed) before configureBlocking, which can fail, is called.
+    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should.
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;
         try {
