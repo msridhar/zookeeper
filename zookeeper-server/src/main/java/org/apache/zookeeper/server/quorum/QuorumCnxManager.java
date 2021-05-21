@@ -1037,7 +1037,7 @@ public class QuorumCnxManager {
              * Sleeps on acceptConnections().
              */
             @Override
-            @ResetMustCall("this")
+            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is @CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called.
             public void run() {
                 try {
                     Thread.currentThread().setName("ListenerHandler-" + address);
@@ -1068,7 +1068,7 @@ public class QuorumCnxManager {
              * Sleeps on accept().
              */
             @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this method is private, and only called on new instances that don't have a nonnull ServerSocket. The loop in which serverSocket is assigned is safe, because exceptions are caught and close() is called before the loop goes around again.
-            @ResetMustCall("this")
+            @CreatesObligation("this")
             private void acceptConnections() {
                 int numRetries = 0;
                 Socket client = null;

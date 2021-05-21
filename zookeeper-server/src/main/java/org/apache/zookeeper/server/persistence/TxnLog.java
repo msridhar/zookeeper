@@ -25,6 +25,8 @@ import org.apache.zookeeper.server.ServerStats;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 
+import org.checkerframework.checker.mustcall.qual.CreatesObligation;
+
 /**
  * Interface for reading transaction logs.
  *
@@ -50,6 +52,7 @@ public interface TxnLog extends Closeable {
      * @return true iff something appended, otw false
      * @throws IOException
      */
+    @CreatesObligation("this")
     boolean append(TxnHeader hdr, Record r) throws IOException;
 
     /**
@@ -60,6 +63,7 @@ public interface TxnLog extends Closeable {
      * returns true iff something appended, otw false
      * @throws IOException
      */
+    @CreatesObligation("this")
     boolean append(TxnHeader hdr, Record r, TxnDigest digest) throws IOException;
 
     /**

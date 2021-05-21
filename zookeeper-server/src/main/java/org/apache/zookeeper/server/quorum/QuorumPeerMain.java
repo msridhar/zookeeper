@@ -141,6 +141,7 @@ public class QuorumPeerMain {
         }
     }
 
+    @SuppressWarnings("objectconstruction:reset.not.owning") // QuorumPeer isn't a jdk class.
     public void runFromConfig(QuorumPeerConfig config) throws IOException, AdminServerException {
         try {
             ManagedUtil.registerLog4jMBeans();

@@ -166,7 +166,7 @@
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
       <!--      <version>0.5.1</version>-->
-      <version>3.10.1-SNAPSHOT</version>
+      <version>3.12.0</version>
       <!--      <scope>system</scope>-->
       <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
     </dependency>
@@ -179,12 +179,12 @@
     <dependency>
       <groupId>net.sridharan.objectconstruction</groupId>
       <artifactId>object-construction-qual</artifactId>
-      <version>0.1.10-SNAPSHOT</version>
+      <version>0.1.12</version>
     </dependency>
     <dependency>
       <groupId>net.sridharan.objectconstruction</groupId>
       <artifactId>must-call-qual</artifactId>
-      <version>0.1.10-SNAPSHOT</version>
+      <version>0.1.12</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -216,7 +216,7 @@
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>3.7.0</version>
+      <version>3.12.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -227,12 +227,12 @@
     <dependency>
       <groupId>net.sridharan.objectconstruction</groupId>
       <artifactId>object-construction-qual</artifactId>
-      <version>0.1.10-SNAPSHOT</version>
+      <version>0.1.12</version>
     </dependency>
     <dependency>
       <groupId>net.sridharan.objectconstruction</groupId>
       <artifactId>must-call-qual</artifactId>
-      <version>0.1.10-SNAPSHOT</version>
+      <version>0.1.12</version>
     </dependency>
   </dependencies>
 
@@ -377,12 +377,12 @@
             <path>
               <groupId>net.sridharan.objectconstruction</groupId>
               <artifactId>object-construction-checker</artifactId>
-              <version>0.1.10-SNAPSHOT</version>
+              <version>0.1.13-SNAPSHOT</version>
             </path>
             <path>
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
-              <version>3.10.1-SNAPSHOT</version>
+              <version>3.12.0</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">

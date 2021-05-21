@@ -998,7 +998,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
 
     Election electionAlg;
 
-    ServerCnxnFactory cnxnFactory;
+    @Owning ServerCnxnFactory cnxnFactory;
     ServerCnxnFactory secureCnxnFactory;
 
     private FileTxnSnapLog logFactory = null;
@@ -1336,9 +1336,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     boolean shuttingDownLE = false;
 
     @Override
-    @ResetMustCall("this.observer")
-    @ResetMustCall("this.follower")
-    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: the corresponding ResetMustCall annotations are here, so why doesn't this work?
+    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: observer and follower are both set by this method, but this method is also responsible for shutting them down. Note that the calls to setObserver and setFollower are in try blocks whose finally blocks call the required methods on the relevant field.
     public void run() {
         updateThreadName();
 
@@ -2001,6 +1999,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         this.quorumListenOnAllIPs = quorumListenOnAllIPs;
     }
 
+    @CreatesObligation("this")
     public void setCnxnFactory(ServerCnxnFactory cnxnFactory) {
         this.cnxnFactory = cnxnFactory;
     }

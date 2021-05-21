@@ -39,10 +39,15 @@ import org.apache.zookeeper.util.ServiceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 /**
  * This class starts and runs a standalone ZooKeeperServer.
  */
 @InterfaceAudience.Public
+@InheritableMustCall("shutdown")
 public class ZooKeeperServerMain {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperServerMain.class);
@@ -50,8 +55,8 @@ public class ZooKeeperServerMain {
     private static final String USAGE = "Usage: ZooKeeperServerMain configfile | port datadir [ticktime] [maxcnxns]";
 
     // ZooKeeper server supports two kinds of connection: unencrypted and encrypted.
-    private ServerCnxnFactory cnxnFactory;
-    private ServerCnxnFactory secureCnxnFactory;
+    private @Owning ServerCnxnFactory cnxnFactory;
+    private @Owning ServerCnxnFactory secureCnxnFactory;
     private ContainerManager containerManager;
     private MetricsProvider metricsProvider;
     private AdminServer adminServer;
@@ -95,6 +100,7 @@ public class ZooKeeperServerMain {
         ServiceUtils.requestSystemExit(ExitCode.EXECUTION_FINISHED.getValue());
     }
 
+    @SuppressWarnings("objectconstruction:reset.not.owning") // this class isn't a JDK class
     protected void initializeAndRun(String[] args) throws ConfigException, IOException, AdminServerException {
         try {
             ManagedUtil.registerLog4jMBeans();
@@ -118,6 +124,7 @@ public class ZooKeeperServerMain {
      * @throws IOException
      * @throws AdminServerException
      */
+    @CreatesObligation("this")
     public void runFromConfig(ServerConfig config) throws IOException, AdminServerException {
         LOG.info("Starting server");
         FileTxnSnapLog txnLog = null;

@@ -77,6 +77,7 @@ import org.checkerframework.checker.mustcall.qual.*;
  * ensemble: Followers and Observers. Both Followers and Observers share
  * a good deal of code which is moved into Peer to avoid duplication.
  */
+@InheritableMustCall("shutdown")
 public class Learner {
 
     static class PacketInFlight {
@@ -303,7 +304,7 @@ public class Learner {
      * Overridable helper method to simply call sock.connect(). This can be
      * overriden in tests to fake connection success/failure for connectToLeader.
      */
-    @ResetMustCall("#1")
+    @CreatesObligation("#1")
     protected void sockConnect(Socket sock, InetSocketAddress addr, int timeout) throws IOException {
         sock.connect(addr, timeout);
     }
@@ -316,7 +317,7 @@ public class Learner {
      * @throws IOException - if the socket connection fails on the 5th attempt
      * if there is an authentication failure while connecting to leader
      */
-    @ResetMustCall("this")
+    @CreatesObligation("this")
     @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this applies to the assignments at the end of the method to leaderIs etc. These are all MCC with the `sock` field, which is owning, so it doesn't matter if they aren't closed.
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 

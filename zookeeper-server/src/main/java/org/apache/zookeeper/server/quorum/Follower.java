@@ -71,7 +71,8 @@ public class Follower extends Learner {
      *
      * @throws InterruptedException
      */
-    @ResetMustCall("this")
+    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: this error is issued at the call to connectToLeader() below, even though there is an @CreatesObligation("this") annotation on this method which should prevent it. This seems like an error in the checker, which should permit resetting "this" in a method that has an @CreatesObligation("this") annotation.
+    @CreatesObligation("this")
     void followLeader() throws InterruptedException {
         self.end_fle = Time.currentElapsedTime();
         long electionTimeTaken = self.end_fle - self.start_fle;

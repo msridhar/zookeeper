@@ -430,7 +430,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
     }
 
     @SuppressWarnings("objectconstruction:required.method.not.called") // FP there is implicitly a check that ss is null before the assignments: `thread` is checked for null, and if it isn't null then this routine returns early, and only this routine assigns both the socket and thread.
-    @ResetMustCall("this")
+    @CreatesObligation("this")
     public synchronized void start() throws IOException {
         if (thread != null && thread.isAlive()) {
             return;

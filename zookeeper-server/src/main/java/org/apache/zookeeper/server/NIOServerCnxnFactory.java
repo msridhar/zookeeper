@@ -581,6 +581,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug?
     @Owning ServerSocketChannel ss;
 
     /**
@@ -631,7 +632,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     @Override
     @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: even though ss is bound before the call to configureBlocking, which could throw an exception, this method rethrows that exception, where it can be caught by the caller. That caller is then responsible for closing ss, which has already been assigned into its field - so no reference to it is lost.
-    @ResetMustCall("this")
+    @CreatesObligation("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
             throw new UnsupportedOperationException("SSL isn't supported in NIOServerCnxn");
@@ -693,7 +694,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     }
 
     @Override
-    @ResetMustCall("this")
+    @CreatesObligation("this")
     @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should.
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;

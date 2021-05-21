@@ -237,7 +237,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * accept() thread if possible.
          * @throws IOException
          */
-        @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // FP: MCC with owning field :: FP: this method is called at most once, so while it technically meets the criteria for resetting, it can't actually reset; it's used in a cached way, so actually writing reset must call here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
+        @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.creates.obligation"}) // FP: MCC with owning field :: FP: this method is called at most once, so while it technically meets the criteria for creates obligation, it can't actually reset; it's used in a cached way, so actually writing @CreatesObligation here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
         private void detectMode() throws IOException {
             byte[] litmus = new byte[5];
             int oldTimeout = -1;
@@ -336,7 +336,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#connect(SocketAddress)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall:mustcall.not.parseable", "objectconstruction:mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this
         public void connect(SocketAddress endpoint) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint);
@@ -346,7 +346,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#connect(SocketAddress, int)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall:mustcall.not.parseable", "objectconstruction:mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this
         public void connect(SocketAddress endpoint, int timeout) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint, timeout);
@@ -356,7 +356,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#bind(SocketAddress)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning", "mustcall.not.parseable"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this  
         public void bind(SocketAddress bindpoint) throws IOException {
             getSocketAllowUnknownMode().bind(bindpoint);
@@ -595,6 +595,8 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#close()}. Calling this method does not trigger mode detection.
          */
         @Override
+        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null
+        @EnsuresCalledMethods(value="sslSocket", methods="close")
         public synchronized void close() throws IOException {
             getSocketAllowUnknownMode().close();
         }
