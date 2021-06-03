@@ -318,7 +318,7 @@ public class Learner {
      * if there is an authentication failure while connecting to leader
      */
     @CreatesObligation("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this applies to the assignments at the end of the method to leaderIs etc. These are all MCC with the `sock` field, which is owning, so it doesn't matter if they aren't closed.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below (validated)
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 
         this.leaderAddr = multiAddr;
@@ -383,7 +383,7 @@ public class Learner {
         }
 
         @Override
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the container AtomicReference, which becomes the owner, or is closed. Needs support for generic containers.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the AtomicReference `socket`, which becomes the owner, or is closed. Needs support for generic containers. (validated)
         public void run() {
             try {
                 Thread.currentThread().setName("LeaderConnector-" + address);
@@ -405,7 +405,7 @@ public class Learner {
             }
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
+        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
         private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
             Socket sock = createSocket();
 

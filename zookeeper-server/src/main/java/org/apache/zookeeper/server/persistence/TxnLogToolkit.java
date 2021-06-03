@@ -99,12 +99,14 @@ public class TxnLogToolkit implements Closeable {
     private File txnLogFile;
     private boolean recoveryMode = false;
     private boolean verbose = false;
-    private FileInputStream txnFis;
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
+    private @Owning FileInputStream txnFis;
     private BinaryInputArchive logStream;
 
     // Recovery mode
     private int crcFixed = 0;
-    private FileOutputStream recoveryFos;
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
+    private @Owning FileOutputStream recoveryFos;
     private BinaryOutputArchive recoveryOa;
     private File recoveryLogFile;
     private FilePadding filePadding = new FilePadding();
@@ -361,6 +363,7 @@ public class TxnLogToolkit implements Closeable {
         return new String(data, StandardCharsets.UTF_8);
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "txnFis = ...": this method is called only from the constructor and is the only assignment to txnFis.
     private void openTxnLogFile() throws FileNotFoundException {
         txnFis = new FileInputStream(txnLogFile);
         logStream = BinaryInputArchive.getArchive(txnFis);
@@ -372,6 +375,7 @@ public class TxnLogToolkit implements Closeable {
         }
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "recoveryFos = ...": this method is called only from the constructor and is the only assignment to recoveryFos.
     private void openRecoveryFile() throws FileNotFoundException {
         recoveryFos = new FileOutputStream(recoveryLogFile);
         recoveryOa = BinaryOutputArchive.getArchive(recoveryFos);

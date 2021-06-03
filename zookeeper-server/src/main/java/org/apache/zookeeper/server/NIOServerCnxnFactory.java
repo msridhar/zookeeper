@@ -118,7 +118,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             this.selector = Selector.open();
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: I'm not sure why we warn here. selector is an owning field, and closing it is handled elsewhere.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: java.nio.channels.Selector#wakeup needs @MustCallAlias on its receiver and return value (validated)
         public void wakeupSelector() {
             selector.wakeup();
         }
@@ -581,7 +581,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug?
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: Checker bug: initializing @Owning field. This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug? (validated)
     @Owning ServerSocketChannel ss;
 
     /**
@@ -631,7 +631,11 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     private final Set<SelectorThread> selectorThreads = new HashSet<SelectorThread>();
 
     @Override
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: even though ss is bound before the call to configureBlocking, which could throw an exception, this method rethrows that exception, where it can be caught by the caller. That caller is then responsible for closing ss, which has already been assigned into its field - so no reference to it is lost.
+    @SuppressWarnings({
+            "objectconstruction:required.method.not.called", // FP: at "this.ss = ...", but `ss` is an `@Owning` field, so there should be no error. (Note that there is a mysterious error at the declaration of `ss`.)
+            "objectconstruction:reset.not.owning" // TODO
+ // FP: even though ss is bound before the call to configureBlocking, which could throw an exception, this method rethrows that exception, where it can be caught by the caller. That caller is then responsible for closing ss, which has already been assigned into its field - so no reference to it is lost.
+    })
     @CreatesObligation("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
