@@ -318,7 +318,7 @@ public class Learner {
      * if there is an authentication failure while connecting to leader
      */
     @CreatesObligation("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this applies to the assignments at the end of the method to leaderIs etc. These are all MCC with the `sock` field, which is owning, so it doesn't matter if they aren't closed.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 
         this.leaderAddr = multiAddr;
@@ -353,7 +353,7 @@ public class Learner {
         if (socketGet == null) {
             throw new IOException("Failed connect to " + multiAddr);
         } else {
-            // TP: the field sock will be overwritten here, causing a leak if a connection was already established.
+            // the field sock will be overwritten here, causing a leak if a connection was already established.
             // I think this assignment should be guarded by a check that either sock is null/closed, or by some code
             // that calls one of the shutdown methods, but I'm not sure which is correct.
             sock = socketGet;
