@@ -163,56 +163,32 @@
     </dependency>
 
     <dependency>
-      <groupId>org.checkerframework</groupId>
-      <artifactId>checker-qual</artifactId>
-      <!--      <version>0.5.1</version>-->
-      <version>3.12.0</version>
-      <!--      <scope>system</scope>-->
-      <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
-    </dependency>
-    <dependency>
-      <groupId>com.google.errorprone</groupId>
-      <artifactId>javac</artifactId>
-      <version>9+181-r4173-1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sridharan.objectconstruction</groupId>
-      <artifactId>object-construction-qual</artifactId>
-      <version>0.1.12</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sridharan.objectconstruction</groupId>
-      <artifactId>must-call-qual</artifactId>
-      <version>0.1.12</version>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>3.4.13</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>3.7.0-SNAPSHOT</version>
-      <scope>compile</scope>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>3.4.13</version>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
     </dependency>
+
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
@@ -234,6 +210,7 @@
       <artifactId>must-call-qual</artifactId>
       <version>0.1.12</version>
     </dependency>
+
   </dependencies>
 
   <properties>
@@ -302,7 +279,6 @@
         </executions>
       </plugin>
       <plugin>
-        <!-- This plugin will set properties values using dependency information -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -377,7 +353,7 @@
             <path>
               <groupId>net.sridharan.objectconstruction</groupId>
               <artifactId>object-construction-checker</artifactId>
-              <version>0.1.13-SNAPSHOT</version>
+              <version>0.1.13</version>
             </path>
             <path>
               <groupId>org.checkerframework</groupId>
