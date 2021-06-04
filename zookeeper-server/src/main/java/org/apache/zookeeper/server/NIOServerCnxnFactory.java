@@ -459,7 +459,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          * Iterate over the queue of accepted connections that have been
          * assigned to this thread but not yet placed on the selector.
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: each value of accepted is either: 1) based to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why this doesn't verify with the message "regular method exit"; I think there must be some imprecision in the CFG.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: If `register()` throws a ClosedSocketException or CancelledKeyException, accepted could be leaked. Mike and I believe that the code *probably* respects the requirements that this imposes: that processAcceptedConnections only be called when the selector is open and the key has not been cancelled. These requirements are not documented, and this class has methods that would allow a client to violate either of them. However, this method is private, so it might be okay. We are conservatively marking this as a false positive under the assumption that the code is correct. (validated)
         private void processAcceptedConnections() {
             SocketChannel accepted;
             while (!stopped && (accepted = acceptedQueue.poll()) != null) {
