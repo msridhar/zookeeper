@@ -99,7 +99,7 @@ public class SnapStream {
      * @return the specific InputStream
      * @throws IOException
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: GZIPInputStream constructor can throw format exceptions, which would cause fis to leak.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: GZIPInputStream constructor can throw format exceptions, which would cause fis to leak. (validated)
     public static CheckedInputStream getInputStream(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         InputStream is;
@@ -125,7 +125,7 @@ public class SnapStream {
      * @return the specific OutputStream
      * @throws IOException
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fos can leak if the GZIPOutputStream constructor throws an exception, which it can: see the discussion of https://bugs.openjdk.java.net/browse/JDK-8180899, which complains about it.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: fos can leak if the GZIPOutputStream constructor throws an exception, which it can: see the discussion of https://bugs.openjdk.java.net/browse/JDK-8180899, which complains about it. (validated)
     public static CheckedOutputStream getOutputStream(File file, boolean fsync) throws IOException {
         OutputStream fos = fsync ? new AtomicFileOutputStream(file) : new FileOutputStream(file);
         OutputStream os;

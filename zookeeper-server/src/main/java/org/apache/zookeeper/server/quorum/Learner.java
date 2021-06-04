@@ -77,6 +77,7 @@ import org.checkerframework.checker.mustcall.qual.*;
  * ensemble: Followers and Observers. Both Followers and Observers share
  * a good deal of code which is moved into Peer to avoid duplication.
  */
+@InheritableMustCall("shutdown")
 public class Learner {
 
     static class PacketInFlight {
@@ -303,7 +304,7 @@ public class Learner {
      * Overridable helper method to simply call sock.connect(). This can be
      * overriden in tests to fake connection success/failure for connectToLeader.
      */
-    @ResetMustCall("#1")
+    @CreatesObligation("#1")
     protected void sockConnect(Socket sock, InetSocketAddress addr, int timeout) throws IOException {
         sock.connect(addr, timeout);
     }
@@ -316,8 +317,8 @@ public class Learner {
      * @throws IOException - if the socket connection fails on the 5th attempt
      * if there is an authentication failure while connecting to leader
      */
-    @ResetMustCall("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this applies to the assignments at the end of the method to leaderIs etc. These are all MCC with the `sock` field, which is owning, so it doesn't matter if they aren't closed.
+    @CreatesObligation("this")
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below (validated)
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 
         this.leaderAddr = multiAddr;
@@ -382,7 +383,7 @@ public class Learner {
         }
 
         @Override
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the container AtomicReference, which becomes the owner, or is closed. Needs support for generic containers.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the AtomicReference `socket`, which becomes the owner, or is closed. Needs support for generic containers. (validated)
         public void run() {
             try {
                 Thread.currentThread().setName("LeaderConnector-" + address);
@@ -404,7 +405,7 @@ public class Learner {
             }
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
+        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
         private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
             Socket sock = createSocket();
 
@@ -850,7 +851,7 @@ public class Learner {
     /**
      * Shutdown the Peer
      */
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.  Note that one of the methods called before closeSocket() might throw an exception, but the checker ignores such unchecked exceptions to reduce false positives.  (validated)
     @EnsuresCalledMethods(value="this.sock", methods="close")
     public void shutdown() {
         self.setZooKeeperServer(null);
@@ -872,6 +873,8 @@ public class Learner {
         return self.isRunning() && zk.isRunning();
     }
 
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSocket() {
         if (sock != null) {
             if (sockBeingClosed.compareAndSet(false, true)) {
@@ -886,6 +889,8 @@ public class Learner {
         }
     }
 
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSockSync() {
         try {
             long startTime = Time.currentElapsedTime();
