@@ -590,8 +590,7 @@ public class NIOServerCnxn extends ServerCnxn {
     }
 
     @EnsuresCalledMethods(value="sock", methods="close")
-    // @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: not sure why this doesn't verify
-    // TP:?? The method has several possibilities to return early before calling closeSocket; maybe that is why.
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: factory.removeCnxn(this) only returns false when the object has already had close() called on it
     private void close() {
         setStale();
         if (!factory.removeCnxn(this)) {
