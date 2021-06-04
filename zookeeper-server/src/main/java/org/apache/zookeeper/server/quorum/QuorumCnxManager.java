@@ -1037,7 +1037,7 @@ public class QuorumCnxManager {
              * Sleeps on acceptConnections().
              */
             @Override
-            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is @CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called.
+            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is @CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called. (validated)
             public void run() {
                 try {
                     Thread.currentThread().setName("ListenerHandler-" + address);

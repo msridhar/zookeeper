@@ -699,7 +699,10 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     @Override
     @CreatesObligation("this")
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should.
+    @SuppressWarnings({
+        "objectconstruction:required.method.not.called", // FP: assignment to @Owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
+    //     "objectconstruction:reset.not.owning" // TODO: Need justification
+    })
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;
         try {
