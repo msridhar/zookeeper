@@ -326,7 +326,6 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
         wakeupCnxn();
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: java.nio.channels.Selector#wakeup needs @MustCallAlias on its receiver and return value (validated)
     private synchronized void wakeupCnxn() {
         selector.wakeup();
     }

@@ -118,7 +118,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             this.selector = Selector.open();
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: java.nio.channels.Selector#wakeup needs @MustCallAlias on its receiver and return value (validated)
         public void wakeupSelector() {
             selector.wakeup();
         }
