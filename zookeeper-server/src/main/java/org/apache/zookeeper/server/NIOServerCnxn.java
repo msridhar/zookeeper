@@ -476,7 +476,6 @@ public class NIOServerCnxn extends ServerCnxn {
 
     }
     /** Return if four letter word found and responded to, otw false **/
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: MCC with owning field
     private boolean checkFourLetterWord(final SelectionKey k, final int len) throws IOException {
         // We take advantage of the limited size of the length to look
         // for cmds. They are all 4-bytes which fits inside of an int
@@ -642,6 +641,7 @@ public class NIOServerCnxn extends ServerCnxn {
     /**
      * Close resources associated with a sock.
      */
+    @SuppressWarnings({"objectconstruction:contracts.postcondition.not.satisfied"}) // FP: nullness reasoning: either sock is null (no need to call anything), or sock.close() gets called
     @EnsuresCalledMethods(value="#1", methods="close")
     public static void closeSock(SocketChannel sock) {
         if (!sock.isOpen()) {

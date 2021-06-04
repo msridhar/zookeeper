@@ -75,7 +75,6 @@ public class AtomicFileOutputStream extends FilterOutputStream {
     }
 
     @Override
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: even when sync() throws an exception, this code definitely closes out. However, we can't prove that because it's controlled by the success boolean.
     public void close() throws IOException {
         boolean triedToClose = false, success = false;
         try {

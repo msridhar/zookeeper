@@ -265,7 +265,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          *
          * @return whether was able to accept a connection or not
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sc will either be passed to addAcceptedConnection, which will return true if it takes ownership, or an exception will be thrown and the catch block will close it. The use of exceptional control flow and our inability to model a method that takes ownership only if it returns true prevent us from verifying this.
         private boolean doAccept() {
             boolean accepted = false;
             SocketChannel sc = null;

@@ -490,7 +490,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
          */
     }
 
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: checker bug: the checker needs a type-refinement rule to give null the type @CalledMethodsBottom, and then this may verify
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either ss is null (no need to call anything), or ss.close() gets called
     @EnsuresCalledMethods(value="ss", methods="close")
     public synchronized void stop() {
         if (ss != null) {
