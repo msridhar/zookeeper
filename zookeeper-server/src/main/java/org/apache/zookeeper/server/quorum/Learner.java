@@ -851,8 +851,7 @@ public class Learner {
     /**
      * Shutdown the Peer
      */
-    // @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.
-    // TP?? One of the methods called before closeSocket() might throw an exception.  (They all have empty `throws` clauses, but might throw an unchecked exception.)
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.  Note that one of the methods called before closeSocket() might throw an exception, but the checker ignores such unchecked exceptions to reduce false positives.  (validated)
     @EnsuresCalledMethods(value="this.sock", methods="close")
     public void shutdown() {
         self.setZooKeeperServer(null);
