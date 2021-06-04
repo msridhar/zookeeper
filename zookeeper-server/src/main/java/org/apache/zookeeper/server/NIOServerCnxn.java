@@ -641,6 +641,7 @@ public class NIOServerCnxn extends ServerCnxn {
     /**
      * Close resources associated with a sock.
      */
+    @SuppressWarnings({"objectconstruction:contracts.postcondition.not.satisfied"}) // FP: nullness reasoning: either sock is null (no need to call anything), or sock.close() gets called
     @EnsuresCalledMethods(value="#1", methods="close")
     public static void closeSock(SocketChannel sock) {
         if (!sock.isOpen()) {

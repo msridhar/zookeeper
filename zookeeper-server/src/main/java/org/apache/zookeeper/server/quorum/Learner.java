@@ -889,7 +889,7 @@ public class Learner {
         }
     }
 
-    // @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
     @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSockSync() {
         try {
