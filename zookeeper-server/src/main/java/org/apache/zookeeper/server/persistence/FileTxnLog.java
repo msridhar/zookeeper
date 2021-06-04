@@ -778,7 +778,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @return true if there is more transactions to be read
          * false if not.
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:reset.not.owning"}) // FP: RMC required on assigning null
+        @CreatesObligation("this")
         public boolean next() throws IOException {
             if (ia == null) {
                 return false;
