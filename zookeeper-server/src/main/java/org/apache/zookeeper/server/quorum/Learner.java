@@ -318,7 +318,7 @@ public class Learner {
      * if there is an authentication failure while connecting to leader
      */
     @CreatesObligation("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below (validated)
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 
         this.leaderAddr = multiAddr;
@@ -353,7 +353,7 @@ public class Learner {
         if (socketGet == null) {
             throw new IOException("Failed connect to " + multiAddr);
         } else {
-            // the field sock will be overwritten here, causing a leak if a connection was already established.
+            // TP: the field sock will be overwritten here, causing a leak if a connection was already established.
             // I think this assignment should be guarded by a check that either sock is null/closed, or by some code
             // that calls one of the shutdown methods, but I'm not sure which is correct.
             sock = socketGet;
@@ -383,7 +383,7 @@ public class Learner {
         }
 
         @Override
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the container AtomicReference, which becomes the owner, or is closed. Needs support for generic containers.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sock is either assigned into the AtomicReference `socket`, which becomes the owner, or is closed. Needs support for generic containers. (validated)
         public void run() {
             try {
                 Thread.currentThread().setName("LeaderConnector-" + address);
@@ -405,7 +405,7 @@ public class Learner {
             }
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
+        @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
         private Socket connectToLeader() throws IOException, X509Exception, InterruptedException {
             Socket sock = createSocket();
 
