@@ -429,7 +429,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         sendPacket(informAndActivateQP);
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: warning about overwriting `ss`.  After the first if statement, thread is null, or thread is non-null and not alive. If thread is null, this is the first time that start() has been called, and ss is being set for the first time.  If thread is non-null and not alive, then stop() has been called (this code does not use the more modern interrupt() idiom), so `ss` has been closed. (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: warning about overwriting `ss`.  After the first if statement, thread is null, or thread is non-null and not alive. If thread is null, this is the first time that start() has been called, and ss is being set for the first time.  If thread is non-null and not alive, then stop() has been called (this code does not use the more modern interrupt() idiom), so `ss` has been closed. (validated)
     @CreatesObligation("this")
     public synchronized void start() throws IOException {
         if (thread != null && thread.isAlive()) {
@@ -458,7 +458,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
         pinger.scheduleAtFixedRate(ping, self.tickTime / 2, self.tickTime / 2, TimeUnit.MILLISECONDS);
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
     public void run() {
         ServerSocket ss;
         synchronized (this) {
@@ -490,7 +490,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
          */
     }
 
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either ss is null (no need to call anything), or ss.close() gets called
+//    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: nullness reasoning: either ss is null (no need to call anything), or ss.close() gets called
     @EnsuresCalledMethods(value="ss", methods="close")
     public synchronized void stop() {
         if (ss != null) {

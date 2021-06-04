@@ -74,7 +74,7 @@ public class UnifiedServerSocket extends ServerSocket {
      * @param allowInsecureConnection if true, accept plaintext connections, otherwise close them.
      * @throws IOException if {@link ServerSocket#ServerSocket()} throws.
      */
-    @SuppressWarnings("mustcall:inconsistent.constructor.type") // FP: unconnected socket constructor (validated)
+////    @SuppressWarnings("mustcall:inconsistent.constructor.type") // FP: unconnected socket constructor (validated)
     public @MustCall({}) UnifiedServerSocket(X509Util x509Util, boolean allowInsecureConnection) throws IOException {
         super();
         this.x509Util = x509Util;
@@ -198,7 +198,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @param allowInsecureConnection
          * @param prependableSocket
          */
-        @SuppressWarnings({"objectconstruction:required.method.not.called"}) // FP: sslSocket cannot have a value when it's overwritten here
+////        @SuppressWarnings({"objectconstruction:required.method.not.called"}) // FP: sslSocket cannot have a value when it's overwritten here
         private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, @Owning PrependableSocket prependableSocket) {
             this.x509Util = x509Util;
             this.allowInsecureConnection = allowInsecureConnection;
@@ -238,8 +238,8 @@ public class UnifiedServerSocket extends ServerSocket {
          * @throws IOException
          */
         @SuppressWarnings({
-                "objectconstruction:required.method.not.called", // FP: on every path, the socket is in either the sslSocket field or the prependableSocket field (or both). When prependableSocket is overwritten by null, sslSocket definitely contains a reference to the underlying socket. The key problem is that this.sslSocket and this.prependableSocket are MustCallAlias with each other, but we don't have a way to express that between two fields.
-                "objectconstruction:missing.creates.obligation" // FP: this method is called at most once, so while it technically meets the criteria for creates obligation, it can't actually reset; it's used in a cached way, so actually writing @CreatesObligation here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
+////                "objectconstruction:required.method.not.called", // FP: on every path, the socket is in either the sslSocket field or the prependableSocket field (or both). When prependableSocket is overwritten by null, sslSocket definitely contains a reference to the underlying socket. The key problem is that this.sslSocket and this.prependableSocket are MustCallAlias with each other, but we don't have a way to express that between two fields.
+////                "objectconstruction:missing.creates.obligation" // FP: this method is called at most once, so while it technically meets the criteria for creates obligation, it can't actually reset; it's used in a cached way, so actually writing @CreatesObligation here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
         })
         private void detectMode() throws IOException {
             byte[] litmus = new byte[5];
@@ -340,7 +340,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @CreatesObligation("this")
-        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
+//        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void connect(SocketAddress endpoint) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint);
         }
@@ -350,7 +350,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @CreatesObligation("this")
-        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
+//        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void connect(SocketAddress endpoint, int timeout) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint, timeout);
         }
@@ -360,7 +360,7 @@ public class UnifiedServerSocket extends ServerSocket {
          */
         @Override
         @CreatesObligation("this")
-        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
+//        @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void bind(SocketAddress bindpoint) throws IOException {
             getSocketAllowUnknownMode().bind(bindpoint);
         }
@@ -598,7 +598,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#close()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null (validated)
+//        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null (validated)
         @EnsuresCalledMethods(value="sslSocket", methods="close")
         public synchronized void close() throws IOException {
             getSocketAllowUnknownMode().close();
@@ -648,7 +648,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#isClosed()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this (validated)
+//        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this (validated)
         public boolean isClosed() {
             return getSocketAllowUnknownMode().isClosed();
         }

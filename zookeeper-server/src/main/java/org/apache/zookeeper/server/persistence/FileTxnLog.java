@@ -236,7 +236,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * rollover the current log file to a new one.
      * @throws IOException
      */
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // TP: see below (validated)
+////    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // TP: see below (validated)
     public synchronized void rollLog() throws IOException {
         if (logStream != null) {
             this.logStream.flush();
@@ -275,7 +275,7 @@ public class FileTxnLog implements TxnLog, Closeable {
 
     @Override
     @CreatesObligation("this")
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: for the required.method.not.called error, see comment below. This warning suppresses the related warnings. (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: for the required.method.not.called error, see comment below. This warning suppresses the related warnings. (validated)
     public synchronized boolean append(TxnHeader hdr, Record txn, TxnDigest digest) throws IOException {
         if (hdr == null) {
             return false;
@@ -399,7 +399,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * commit the logs. make sure that everything hits the
      * disk
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners (validated)
     public synchronized void commit() throws IOException {
         if (logStream != null) {
             logStream.flush();
@@ -492,7 +492,7 @@ public class FileTxnLog implements TxnLog, Closeable {
             }
             long pos = input.getPosition();
             // now, truncate at the current position
-            @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed. (validated)
+//            @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed. (validated)
             RandomAccessFile raf = new RandomAccessFile(itr.logFile, "rw");
             raf.setLength(pos);
             raf.close();
@@ -655,7 +655,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          *        a given zxid
          * @throws IOException
          */
-        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: CreatesObligation("this") method called by constructor (validated)
+//        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: CreatesObligation("this") method called by constructor (validated)
         public FileTxnIterator(File logDir, long zxid, boolean fastForward) throws IOException {
             this.logDir = logDir;
             this.zxid = zxid;

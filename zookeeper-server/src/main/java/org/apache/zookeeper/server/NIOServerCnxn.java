@@ -590,7 +590,7 @@ public class NIOServerCnxn extends ServerCnxn {
     }
 
     @EnsuresCalledMethods(value="sock", methods="close")
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: factory.removeCnxn(this) only returns false when the object has already had close() called on it
+//    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: factory.removeCnxn(this) only returns false when the object has already had close() called on it
     private void close() {
         setStale();
         if (!factory.removeCnxn(this)) {
@@ -618,8 +618,8 @@ public class NIOServerCnxn extends ServerCnxn {
      */
     @EnsuresCalledMethods(value="sock", methods="close")
     @SuppressWarnings({
-           "objectconstruction:contracts.postcondition.not.satisfied", // FP: java.nio.channels.Channel#isOpen lacks "@EnsuresCalledMethodsIf(expression="this", result=false, methods={"close"})" (validated)
-    //         "objectconstruction:required.method.not.called" // FP: MCC with owning field (TODO: clarify justification)
+//           "objectconstruction:contracts.postcondition.not.satisfied", // FP: java.nio.channels.Channel#isOpen lacks "@EnsuresCalledMethodsIf(expression="this", result=false, methods={"close"})" (validated)
+//    //         "objectconstruction:required.method.not.called" // FP: MCC with owning field (TODO: clarify justification)
     })
     private void closeSock() {
         if (!sock.isOpen()) {
@@ -641,7 +641,7 @@ public class NIOServerCnxn extends ServerCnxn {
     /**
      * Close resources associated with a sock.
      */
-    @SuppressWarnings({"objectconstruction:contracts.postcondition.not.satisfied"}) // FP: nullness reasoning: either sock is null (no need to call anything), or sock.close() gets called
+//    @SuppressWarnings({"objectconstruction:contracts.postcondition.not.satisfied"}) // FP: nullness reasoning: either sock is null (no need to call anything), or sock.close() gets called
     @EnsuresCalledMethods(value="#1", methods="close")
     public static void closeSock(SocketChannel sock) {
         if (!sock.isOpen()) {

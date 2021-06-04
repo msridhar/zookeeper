@@ -84,7 +84,7 @@ public class FourLetterWordMain {
      * @throws java.io.IOException
      * @throws SSLContextException
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setSoTimeout (called on sock after it is already connected) could throw an exception and then sock would not be closed (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setSoTimeout (called on sock after it is already connected) could throw an exception and then sock would not be closed (validated)
     public static String send4LetterWord(
         String host,
         int port,
