@@ -236,7 +236,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * rollover the current log file to a new one.
      * @throws IOException
      */
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // TP: see below
+    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:missing.reset.mustcall"}) // TP: see below (validated)
     public synchronized void rollLog() throws IOException {
         if (logStream != null) {
             this.logStream.flush();
@@ -254,13 +254,12 @@ public class FileTxnLog implements TxnLog, Closeable {
      * @throws IOException
      */
     @EnsuresCalledMethods(value="logStream", methods="close")
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: ???
     public synchronized void close() throws IOException {
-        if (logStream != null) {
-            logStream.close();
-        }
         for (FileOutputStream log : streamsToFlush) {
             log.close();
+        }
+        if (logStream != null) {
+            logStream.close();
         }
     }
 
@@ -270,14 +269,13 @@ public class FileTxnLog implements TxnLog, Closeable {
      * @param txn the transaction part of the entry
      * returns true iff something appended, otw false
      */
-    @ResetMustCall("this")
     public synchronized boolean append(TxnHeader hdr, Record txn) throws IOException {
               return append(hdr, txn, null);
     }
 
     @Override
-    @SuppressWarnings("objectconstruction:required.method.not.called") // see comment below. This warning suppresses the related warnings.
-    @ResetMustCall("this")
+    @CreatesObligation("this")
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: for the required.method.not.called error, see comment below. This warning suppresses the related warnings. (validated)
     public synchronized boolean append(TxnHeader hdr, Record txn, TxnDigest digest) throws IOException {
         if (hdr == null) {
             return false;
@@ -401,7 +399,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * commit the logs. make sure that everything hits the
      * disk
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners (validated)
     public synchronized void commit() throws IOException {
         if (logStream != null) {
             logStream.flush();
@@ -494,7 +492,7 @@ public class FileTxnLog implements TxnLog, Closeable {
             }
             long pos = input.getPosition();
             // now, truncate at the current position
-            @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed.
+            @SuppressWarnings("objectconstruction:required.method.not.called") // TP: setLength can throw, which would cause raf not to be closed. (validated)
             RandomAccessFile raf = new RandomAccessFile(itr.logFile, "rw");
             raf.setLength(pos);
             raf.close();
@@ -567,7 +565,7 @@ public class FileTxnLog implements TxnLog, Closeable {
 
         long position;
 
-        protected @MustCallChoice PositionInputStream(@MustCallChoice InputStream in) {
+        protected @MustCallAlias PositionInputStream(@MustCallAlias InputStream in) {
             super(in);
             position = 0;
         }
@@ -657,7 +655,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          *        a given zxid
          * @throws IOException
          */
-        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: ResetMustCall("this") method called by constructor
+        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: CreatesObligation("this") method called by constructor (validated)
         public FileTxnIterator(File logDir, long zxid, boolean fastForward) throws IOException {
             this.logDir = logDir;
             this.zxid = zxid;
@@ -687,7 +685,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * this is inclusive of the zxid
          * @throws IOException
          */
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         void init() throws IOException {
             storedFiles = new ArrayList<>();
             List<File> files = Util.sortDataDir(
@@ -724,7 +722,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * new file to be read
          * @throws IOException
          */
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         private boolean goToNextLog() throws IOException {
             if (storedFiles.size() > 0) {
                 this.logFile = storedFiles.remove(storedFiles.size() - 1);
@@ -755,7 +753,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @param logFile the file to read.
          * @throws IOException
          **/
-        @ResetMustCall("this")
+        @CreatesObligation("this")
         protected InputArchive createInputArchive(File logFile) throws IOException {
             if (inputStream == null) {
                 inputStream = new PositionInputStream(new BufferedInputStream(new FileInputStream(logFile)));
@@ -780,7 +778,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @return true if there is more transactions to be read
          * false if not.
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:reset.not.owning"}) // FP: RMC required on assigning null
+        @CreatesObligation("this")
         public boolean next() throws IOException {
             if (ia == null) {
                 return false;

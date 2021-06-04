@@ -37,7 +37,7 @@ public class PrependableSocket extends Socket {
     }
 
     @Override
-    public @MustCallChoice InputStream getInputStream(@MustCallChoice PrependableSocket this) throws IOException {
+    public @MustCallAlias InputStream getInputStream(@MustCallAlias PrependableSocket this) throws IOException {
         if (pushbackInputStream == null) {
             return super.getInputStream();
         }

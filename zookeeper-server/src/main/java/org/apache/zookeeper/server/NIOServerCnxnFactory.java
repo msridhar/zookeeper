@@ -118,7 +118,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             this.selector = Selector.open();
         }
 
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: I'm not sure why we warn here. selector is an owning field, and closing it is handled elsewhere.
         public void wakeupSelector() {
             selector.wakeup();
         }
@@ -265,7 +264,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          *
          * @return whether was able to accept a connection or not
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sc will either be passed to addAcceptedConnection, which will return true if it takes ownership, or an exception will be thrown and the catch block will close it. The use of exceptional control flow and our inability to model a method that takes ownership only if it returns true prevent us from verifying this.
         private boolean doAccept() {
             boolean accepted = false;
             SocketChannel sc = null;
@@ -459,7 +457,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          * Iterate over the queue of accepted connections that have been
          * assigned to this thread but not yet placed on the selector.
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: each value of accepted is either: 1) based to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why this doesn't verify with the message "regular method exit"; I think there must be some imprecision in the CFG.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: If `register()` throws a ClosedSocketException or CancelledKeyException, accepted could be leaked. Mike and I believe that the code *probably* respects the requirements that this imposes: that processAcceptedConnections only be called when the selector is open and the key has not been cancelled. These requirements are not documented, and this class has methods that would allow a client to violate either of them. However, this method is private, so it might be okay. We are conservatively marking this as a false positive under the assumption that the code is correct. (validated)
         private void processAcceptedConnections() {
             SocketChannel accepted;
             while (!stopped && (accepted = acceptedQueue.poll()) != null) {
@@ -581,6 +579,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: Checker bug: initializing @Owning field. This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug? (validated)
     @Owning ServerSocketChannel ss;
 
     /**
@@ -630,8 +629,11 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     private final Set<SelectorThread> selectorThreads = new HashSet<SelectorThread>();
 
     @Override
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: even though ss is bound before the call to configureBlocking, which could throw an exception, this method rethrows that exception, where it can be caught by the caller. That caller is then responsible for closing ss, which has already been assigned into its field - so no reference to it is lost.
-    @ResetMustCall("this")
+    @SuppressWarnings({
+            "objectconstruction:required.method.not.called", // FP: assignment to @Owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
+            "objectconstruction:reset.not.owning" // FP: calls to bind() on ss.socket() require the @CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
+    })
+    @CreatesObligation("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
             throw new UnsupportedOperationException("SSL isn't supported in NIOServerCnxn");
@@ -693,8 +695,11 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     }
 
     @Override
-    @ResetMustCall("this")
-    @SuppressWarnings({"objectconstruction:required.method.not.called", "objectconstruction:reset.not.owning"}) // FP: ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should.
+    @CreatesObligation("this")
+    @SuppressWarnings({
+        "objectconstruction:required.method.not.called", // FP: assignment to @Owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
+        "objectconstruction:reset.not.owning" // FP: the call to bind() on ss.socket() requires the @CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
+    })
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;
         try {

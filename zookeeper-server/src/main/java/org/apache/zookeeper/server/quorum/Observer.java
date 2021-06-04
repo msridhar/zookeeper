@@ -101,7 +101,8 @@ public class Observer extends Learner {
      * the main method called by the observer to observe the leader
      * @throws Exception
      */
-    @ResetMustCall("this")
+    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: checker bug: this error is issued at the call to connectToLeader() below, even though there is an @CreatesObligation("this") annotation on this method which should prevent it. (validated)
+    @CreatesObligation("this")
     void observeLeader() throws Exception {
         zk.registerJMX(new ObserverBean(this, zk), self.jmxLocalPeerBean);
         long connectTime = 0;
