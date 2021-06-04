@@ -873,6 +873,8 @@ public class Learner {
         return self.isRunning() && zk.isRunning();
     }
 
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: checker bug: the checker needs a type-refinement rule to give null the type @CalledMethodsBottom, and then this may verify
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSocket() {
         if (sock != null) {
             if (sockBeingClosed.compareAndSet(false, true)) {
@@ -887,6 +889,8 @@ public class Learner {
         }
     }
 
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: checker bug: the checker needs a type-refinement rule to give null the type @CalledMethodsBottom, and then this may verify
+    @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSockSync() {
         try {
             long startTime = Time.currentElapsedTime();
