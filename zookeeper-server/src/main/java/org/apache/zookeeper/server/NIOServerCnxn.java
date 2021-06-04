@@ -639,7 +639,6 @@ public class NIOServerCnxn extends ServerCnxn {
     /**
      * Close resources associated with a sock.
      */
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: not sure why this doesn't verify
     @EnsuresCalledMethods(value="#1", methods="close")
     public static void closeSock(SocketChannel sock) {
         if (!sock.isOpen()) {

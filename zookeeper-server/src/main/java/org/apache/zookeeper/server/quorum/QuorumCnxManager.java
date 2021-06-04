@@ -1209,7 +1209,7 @@ public class QuorumCnxManager {
             return recvWorker;
         }
 
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket also has EnsuresCalledMethods, but apparently they don't chain? IDK, this should verify. Maybe a viewpoint adaptation problem?
+        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
         @EnsuresCalledMethods(value="this.sock", methods="close")
         synchronized boolean finish() {
             LOG.debug("Calling SendWorker.finish for {}", sid);

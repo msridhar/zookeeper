@@ -198,7 +198,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @param allowInsecureConnection
          * @param prependableSocket
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall","objectconstruction:required.method.not.called"}) // FP constructor treated as instance method by our analysis. (validated)
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall","objectconstruction:required.method.not.called"}) // FP: constructor treated as instance method by our analysis. (validated)
         private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, @Owning PrependableSocket prependableSocket) {
             this.x509Util = x509Util;
             this.allowInsecureConnection = allowInsecureConnection;
@@ -595,7 +595,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#close()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null
+        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null (validated)
         @EnsuresCalledMethods(value="sslSocket", methods="close")
         public synchronized void close() throws IOException {
             getSocketAllowUnknownMode().close();
@@ -645,7 +645,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#isClosed()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this
+        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this (validated)
         public boolean isClosed() {
             return getSocketAllowUnknownMode().isClosed();
         }
