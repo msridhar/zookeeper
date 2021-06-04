@@ -153,6 +153,7 @@ public interface TxnLog extends Closeable {
          * go to the next transaction record.
          * @throws IOException
          */
+        @CreatesObligation("this")
         boolean next() throws IOException;
 
         /**
