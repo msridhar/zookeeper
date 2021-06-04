@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.zookeeper</groupId>
     <artifactId>parent</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>zookeeper</artifactId>
@@ -40,13 +40,17 @@
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
+      <artifactId>hamcrest-all</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.zookeeper</groupId>
@@ -89,13 +93,13 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-client</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -114,9 +118,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-       <groupId>io.dropwizard.metrics</groupId>
-       <artifactId>metrics-core</artifactId>
-       <scope>provided</scope>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -148,6 +152,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial.snappy</groupId>
+      <artifactId>snappy-java</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
@@ -167,18 +182,41 @@
       <artifactId>junit-platform-runner</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
-      <groupId>org.xerial.snappy</groupId>
-      <artifactId>snappy-java</artifactId>
-      <scope>provided</scope>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
     </dependency>
-      <dependency>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-          <version>2.6</version>
-          <scope>compile</scope>
-      </dependency>
+
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>javac</artifactId>
+      <version>9+181-r4173-1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>object-construction-qual</artifactId>
+      <version>0.1.14-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>must-call-qual</artifactId>
+      <version>0.1.14-SNAPSHOT</version>
+    </dependency>
+
   </dependencies>
+
+  <properties>
+    <!-- These properties will be set by the Maven Dependency plugin -->
+    <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
+  </properties>
 
   <build>
     <plugins>
@@ -257,6 +295,12 @@
               <excludeTransitive>false</excludeTransitive>
             </configuration>
           </execution>
+
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
         </executions>
       </plugin>
 
@@ -271,13 +315,14 @@
           <reuseForks>false</reuseForks>
           <argLine>-Xmx512m -Dtest.junit.threads=${surefire-forkcount} -Dzookeeper.junit.threadid=${surefire.forkNumber} -javaagent:${org.jmockit:jmockit:jar}</argLine>
           <basedir>${project.basedir}</basedir>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <systemPropertyVariables>
             <build.test.dir>${project.build.directory}/surefire</build.test.dir>
             <zookeeper.DigestAuthenticationProvider.superDigest>super:D/InIHSb7yEEbrWz8b9l71RjZJU=</zookeeper.DigestAuthenticationProvider.superDigest>
           </systemPropertyVariables>
         </configuration>
       </plugin>
-	  
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -290,7 +335,69 @@
           </execution>
         </executions>
       </plugin>
-     </plugins>
+
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <fork>true</fork>
+          <source>1.8</source>
+          <target>1.8</target>
+          <showWarnings>true</showWarnings>
+          <compilerArguments>
+            <Xmaxerrs>10000</Xmaxerrs>
+            <Xmaxwarns>10000</Xmaxwarns>
+          </compilerArguments>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>net.sridharan.objectconstruction</groupId>
+              <artifactId>object-construction-checker</artifactId>
+              <version>0.1.14-SNAPSHOT</version>
+            </path>
+            <path>
+              <groupId>org.checkerframework</groupId>
+              <artifactId>checker</artifactId>
+              <version>3.12.0</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs combine.children="append">
+            <!-- If using JDK 8, use only the two arguments immediately below. -->
+            <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
+            <arg>-AcheckMustCall</arg>
+            <!--arg>-AonlyUses=^java\.</arg-->
+            <arg>-AcountMustCall</arg>
+            <arg>-ArequirePrefixInWarningSuppressions</arg>
+            <arg>-AwarnUnneededSuppressions</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+
+    </plugins>
   </build>
+
+
+  <profiles>
+    <profile>
+      <id>java-8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.19.1</version>
+            <configuration>
+              <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
+              <!-- put javac.jar on bootclasspath when executing tests -->
+              <argLine>-Xmx1g -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
