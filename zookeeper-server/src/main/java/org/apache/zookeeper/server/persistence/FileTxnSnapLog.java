@@ -43,12 +43,17 @@ import org.apache.zookeeper.txn.TxnHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.calledmethods.qual.*;
+import org.checkerframework.checker.mustcall.qual.*;
+
 /**
  * This is a helper class
  * above the implementations
  * of txnlog and snapshot
  * classes
  */
+@InheritableMustCall("close")
 public class FileTxnSnapLog {
 
     //the directory containing the
@@ -57,7 +62,7 @@ public class FileTxnSnapLog {
     //the directory containing the
     //the snapshot directory
     final File snapDir;
-    TxnLog txnLog;
+    @Owning TxnLog txnLog;
     SnapShot snapLog;
     private final boolean autoCreateDB;
     private final boolean trustEmptySnapshot;
@@ -499,6 +504,7 @@ public class FileTxnSnapLog {
      * @return true if able to truncate the log, false if not
      * @throws IOException
      */
+    @CreatesObligation("this")
     public boolean truncateLog(long zxid) {
         try {
             // close the existing txnLog and snapLog
@@ -578,6 +584,7 @@ public class FileTxnSnapLog {
      * @return true iff something appended, otw false
      * @throws IOException
      */
+    @CreatesObligation("this")
     public boolean append(Request si) throws IOException {
         return txnLog.append(si.getHdr(), si.getTxn(), si.getTxnDigest());
     }

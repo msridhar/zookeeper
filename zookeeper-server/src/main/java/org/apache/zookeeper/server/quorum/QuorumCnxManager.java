@@ -374,7 +374,7 @@ public class QuorumCnxManager {
      * If this server has initiated the connection, then it gives up on the
      * connection if it loses challenge. Otherwise, it keeps the connection.
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: SOCKET_FACTORY.get() is an unconnected socket, but we don't have a way to specify that given that it's a Supplier.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: SOCKET_FACTORY.get() is an unconnected socket, but we don't have a way to specify that given that it's a Supplier. (validated)
     public void initiateConnection(final MultipleAddresses electionAddr, final Long sid) {
         Socket sock = null;
         try {
@@ -586,7 +586,7 @@ public class QuorumCnxManager {
     private class QuorumConnectionReceiverThread extends ZooKeeperThread {
 
         private final Socket sock;
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this is a thread, which will definitely have run() called upon it. This method takes the socket and puts it in a field temporarily; when run is called, sock is passed to receiveConnection(), which takes ownership.
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this is a thread, which will definitely have run() called upon it. This method takes the socket and puts it in a field temporarily; when run is called, sock is passed to receiveConnection(), which takes ownership. (validated)
         QuorumConnectionReceiverThread(final @Owning Socket sock) {
             super("QuorumConnectionReceiverThread-" + sock.getRemoteSocketAddress());
             this.sock = sock;
@@ -599,7 +599,7 @@ public class QuorumCnxManager {
 
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below
+    @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see below (validated)
     private void handleConnection(@Owning Socket sock, DataInputStream din) throws IOException {
         Long sid = null, protocolVersion = null;
         MultipleAddresses electionAddr = null;
@@ -1037,7 +1037,7 @@ public class QuorumCnxManager {
              * Sleeps on acceptConnections().
              */
             @Override
-            @ResetMustCall("this")
+            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is @CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called. (validated)
             public void run() {
                 try {
                     Thread.currentThread().setName("ListenerHandler-" + address);
@@ -1067,8 +1067,11 @@ public class QuorumCnxManager {
             /**
              * Sleeps on accept().
              */
-            @SuppressWarnings("objectconstruction:required.method.not.called") // FP: this method is private, and only called on new instances that don't have a nonnull ServerSocket. The loop in which serverSocket is assigned is safe, because exceptions are caught and close() is called before the loop goes around again.
-            @ResetMustCall("this")
+            @SuppressWarnings({
+                    "objectconstruction:required.method.not.called", // FP: Warning about re-assigning @Owning field `serverSocket`.  The first assignment is OK, because this method is private and is only called on new instances where `serverSocket` is null.  There is a second iteration only if shutdown is false.  shutdown is false only if the inner loop throws an exception, but the inner loop catches IOException and calls close() before the outer loop goes around again.  If the inner loop throws an exception other than IOException, then it is not caught by the outer loop and the outer loop terminates without iterating a second time. (validated)
+                    "objectconstruction:required.method.not.called", // TP: Warning about re-assigning local variable `client`.  The body calls receiveConnection{Async} which is owning, so that is OK.  setSockOpts may throw SocketException which is a subtype of IO exception, and the catch clause closes `client`.  However, if SocketTimeoutException is thrown, then `client` never gets closed before the next iteration of the inner while loop. (validated)
+            })
+            @CreatesObligation("this")
             private void acceptConnections() {
                 int numRetries = 0;
                 Socket client = null;
@@ -1177,7 +1180,7 @@ public class QuorumCnxManager {
          * @param sid
          *            Server identifier of remote peer
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) // FP: this is a constructor, but our analysis is treating it as an instance method
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) // FP: this is a constructor, but our analysis is treating it as an instance method (validated)
         SendWorker(@Owning Socket sock, Long sid) {
             super("SendWorker:" + sid);
             this.sid = sid;
@@ -1206,7 +1209,7 @@ public class QuorumCnxManager {
             return recvWorker;
         }
 
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: closeSocket also has EnsuresCalledMethods, but apparently they don't chain? IDK, this should verify. Maybe a viewpoint adaptation problem?
+        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
         @EnsuresCalledMethods(value="this.sock", methods="close")
         synchronized boolean finish() {
             LOG.debug("Calling SendWorker.finish for {}", sid);
