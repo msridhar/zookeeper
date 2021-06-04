@@ -47,7 +47,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientCnxnSocketNIO.class);
 
-//    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: initializing @Owning field (validated)
+//    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: initializing owning field (validated)
     private final @Owning Selector selector = Selector.open();
 
     private SelectionKey sockKey;

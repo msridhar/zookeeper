@@ -238,8 +238,8 @@ public class UnifiedServerSocket extends ServerSocket {
          * @throws IOException
          */
         @SuppressWarnings({
-////                "objectconstruction:required.method.not.called", // FP: on every path, the socket is in either the sslSocket field or the prependableSocket field (or both). When prependableSocket is overwritten by null, sslSocket definitely contains a reference to the underlying socket. The key problem is that this.sslSocket and this.prependableSocket are MustCallAlias with each other, but we don't have a way to express that between two fields.
-////                "objectconstruction:missing.creates.obligation" // FP: this method is called at most once, so while it technically meets the criteria for creates obligation, it can't actually reset; it's used in a cached way, so actually writing @CreatesObligation here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
+//                "objectconstruction:required.method.not.called", // FP: on every path, the socket is in either the sslSocket field or the prependableSocket field (or both). When prependableSocket is overwritten by null, sslSocket definitely contains a reference to the underlying socket. The key problem is that this.sslSocket and this.prependableSocket are MustCallAlias with each other, but we don't have a way to express that between two fields.
+//                "objectconstruction:missing.creates.obligation" // FP: this method is called at most once, so while it technically meets the criteria for creates obligation, it can't actually reset; it's used in a cached way, so actually writing CreatesObligation here would require us to write it in a lot of other places that don't make sense (anywhere the actual underlying socket is used!)
         })
         private void detectMode() throws IOException {
             byte[] litmus = new byte[5];

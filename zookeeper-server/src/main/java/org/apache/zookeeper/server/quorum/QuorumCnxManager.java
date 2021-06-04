@@ -1037,7 +1037,7 @@ public class QuorumCnxManager {
              * Sleeps on acceptConnections().
              */
             @Override
-//            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is @CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called. (validated)
+//            @SuppressWarnings("objectconstruction:reset.not.owning") // FP: acceptConnections is CreatesObligation("this"), but close is guaranteed to be called on this on every path on which it is called. (validated)
             public void run() {
                 try {
                     Thread.currentThread().setName("ListenerHandler-" + address);
@@ -1068,7 +1068,7 @@ public class QuorumCnxManager {
              * Sleeps on accept().
              */
             @SuppressWarnings({
-//                    "objectconstruction:required.method.not.called", // FP: Warning about re-assigning @Owning field `serverSocket`.  The first assignment is OK, because this method is private and is only called on new instances where `serverSocket` is null.  There is a second iteration only if shutdown is false.  shutdown is false only if the inner loop throws an exception, but the inner loop catches IOException and calls close() before the outer loop goes around again.  If the inner loop throws an exception other than IOException, then it is not caught by the outer loop and the outer loop terminates without iterating a second time. (validated)
+//                    "objectconstruction:required.method.not.called", // FP: Warning about re-assigning owning field `serverSocket`.  The first assignment is OK, because this method is private and is only called on new instances where `serverSocket` is null.  There is a second iteration only if shutdown is false.  shutdown is false only if the inner loop throws an exception, but the inner loop catches IOException and calls close() before the outer loop goes around again.  If the inner loop throws an exception other than IOException, then it is not caught by the outer loop and the outer loop terminates without iterating a second time. (validated)
 //                    "objectconstruction:required.method.not.called", // TP: Warning about re-assigning local variable `client`.  The body calls receiveConnection{Async} which is owning, so that is OK.  setSockOpts may throw SocketException which is a subtype of IO exception, and the catch clause closes `client`.  However, if SocketTimeoutException is thrown, then `client` never gets closed before the next iteration of the inner while loop. (validated)
             })
             @CreatesObligation("this")

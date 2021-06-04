@@ -55,7 +55,7 @@ public class TxnLogProposalIterator implements Iterator<Proposal> {
      * Proposal returned by this iterator has request part set to null, since
      * it is not used for follower sync-up.
      */
-//    @SuppressWarnings("objectconstruction:reset.not.owning") // TP: this method comes from java.util.Iterator, which means that it definitely cannot have an @CreatesObligation annotation - that would violate subtyping (calling next() on a variable of static type Iterator would not create a new obligation). However, the call to itr.next() actually does create a new obligation for itr. If we were checking non-JDK classes, then this class would be @MustCall("close") - note that its close method closes itr.
+//    @SuppressWarnings("objectconstruction:reset.not.owning") // TP: this method comes from java.util.Iterator, which means that it definitely cannot have a CreatesObligation annotation - that would violate subtyping (calling next() on a variable of static type Iterator would not create a new obligation). However, the call to itr.next() actually does create a new obligation for itr. If we were checking non-JDK classes, then this class would be MustCall("close") - note that its close method closes itr.
     @Override
     public Proposal next() {
 
