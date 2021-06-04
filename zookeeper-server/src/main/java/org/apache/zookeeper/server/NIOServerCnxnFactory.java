@@ -265,7 +265,6 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          *
          * @return whether was able to accept a connection or not
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: sc will either be passed to addAcceptedConnection, which will return true if it takes ownership, or an exception will be thrown and the catch block will close it. The use of exceptional control flow and our inability to model a method that takes ownership only if it returns true prevent us from verifying this.
         private boolean doAccept() {
             boolean accepted = false;
             SocketChannel sc = null;
@@ -459,7 +458,8 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          * Iterate over the queue of accepted connections that have been
          * assigned to this thread but not yet placed on the selector.
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: each value of accepted is either: 1) based to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why this doesn't verify with the message "regular method exit"; I think there must be some imprecision in the CFG.
+        // @SuppressWarnings("objectconstruction:required.method.not.called") // FP: each value of accepted is either: 1) passed to createConnection, which takes ownership, or 2) closed by fastCloseSock. I'm not sure why verifification fails with the message "regular method exit"; I think there must be some imprecision in the CFG.
+        // TP:?? register() can throw IllegalStateException and IllegalArgumentException in addition to IOException, and in that case `accepted` would not be handled.  (I agree that in that case the verification failure should be "exceptional exit".)
         private void processAcceptedConnections() {
             SocketChannel accepted;
             while (!stopped && (accepted = acceptedQueue.poll()) != null) {

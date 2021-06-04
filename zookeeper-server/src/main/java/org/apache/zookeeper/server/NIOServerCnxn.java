@@ -476,7 +476,6 @@ public class NIOServerCnxn extends ServerCnxn {
 
     }
     /** Return if four letter word found and responded to, otw false **/
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: MCC with owning field
     private boolean checkFourLetterWord(final SelectionKey k, final int len) throws IOException {
         // We take advantage of the limited size of the length to look
         // for cmds. They are all 4-bytes which fits inside of an int
@@ -591,7 +590,8 @@ public class NIOServerCnxn extends ServerCnxn {
     }
 
     @EnsuresCalledMethods(value="sock", methods="close")
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: not sure why this doesn't verify
+    // @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP: not sure why this doesn't verify
+    // TP:?? The method has several possibilities to return early before calling closeSocket; maybe that is why.
     private void close() {
         setStale();
         if (!factory.removeCnxn(this)) {
