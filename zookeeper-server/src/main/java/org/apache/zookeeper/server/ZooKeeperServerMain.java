@@ -100,7 +100,7 @@ public class ZooKeeperServerMain {
         ServiceUtils.requestSystemExit(ExitCode.EXECUTION_FINISHED.getValue());
     }
 
-    @SuppressWarnings("objectconstruction:reset.not.owning") // this class isn't a JDK class
+    @SuppressWarnings("objectconstruction:reset.not.owning") // this class isn't a JDK class (validated)
     protected void initializeAndRun(String[] args) throws ConfigException, IOException, AdminServerException {
         try {
             ManagedUtil.registerLog4jMBeans();

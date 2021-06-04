@@ -618,7 +618,10 @@ public class NIOServerCnxn extends ServerCnxn {
      * Close resources associated with the sock of this cnxn.
      */
     @EnsuresCalledMethods(value="sock", methods="close")
-    @SuppressWarnings({"objectconstruction:contracts.postcondition.not.satisfied", "objectconstruction:required.method.not.called"}) // FP: not sure why this doesn't verify :: FP: MCC with owning field
+    @SuppressWarnings({
+           "objectconstruction:contracts.postcondition.not.satisfied", // FP: java.nio.channels.Channel#isOpen lacks "@EnsuresCalledMethodsIf(expression="this", result=false, methods={"close"})" (validated)
+    //         "objectconstruction:required.method.not.called" // FP: MCC with owning field (TODO: clarify justification)
+    })
     private void closeSock() {
         if (!sock.isOpen()) {
             return;
