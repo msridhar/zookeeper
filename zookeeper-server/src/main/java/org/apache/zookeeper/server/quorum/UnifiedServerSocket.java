@@ -198,7 +198,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * @param allowInsecureConnection
          * @param prependableSocket
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall","objectconstruction:required.method.not.called"}) // FP constructor treated as instance method by our analysis. (validated)
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall","objectconstruction:required.method.not.called"}) // FP: constructor treated as instance method by our analysis. (validated)
         private UnifiedSocket(X509Util x509Util, boolean allowInsecureConnection, @Owning PrependableSocket prependableSocket) {
             this.x509Util = x509Util;
             this.allowInsecureConnection = allowInsecureConnection;
