@@ -98,14 +98,12 @@ public class TxnLogToolkit implements Closeable {
     private File txnLogFile;
     private boolean recoveryMode = false;
     private boolean verbose = false;
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
-    private @Owning FileInputStream txnFis;
+    private FileInputStream txnFis;
     private BinaryInputArchive logStream;
 
     // Recovery mode
     private int crcFixed = 0;
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
-    private @Owning FileOutputStream recoveryFos;
+    private FileOutputStream recoveryFos;
     private BinaryOutputArchive recoveryOa;
     private File recoveryLogFile;
     private FilePadding filePadding = new FilePadding();
