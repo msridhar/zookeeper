@@ -61,7 +61,6 @@ import org.apache.zookeeper.txn.Txn;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
 
-@SuppressWarnings("objectconstruction:required.method.not.called") // FP: The logic here is confusing. There are two variables that are set early that control whether these files get opened and closed: recovery mode and txn log mode. These variables are either always null, or if they're nonnull then the class has extra methods that have to be called. I think it's very errorprone, but it could be correct; we certainly cannot verify this kind of control flow, though, and I don't think that's a bad thing.
 public class TxnLogToolkit implements Closeable {
 
     static class TxnLogToolkitException extends Exception {
@@ -363,7 +362,7 @@ public class TxnLogToolkit implements Closeable {
         return new String(data, StandardCharsets.UTF_8);
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "txnFis = ...": this method is called only from the constructor and is the only assignment to txnFis.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "txnFis = ...": this method is called only from the constructor and is the only assignment to txnFis. (validated)
     private void openTxnLogFile() throws FileNotFoundException {
         txnFis = new FileInputStream(txnLogFile);
         logStream = BinaryInputArchive.getArchive(txnFis);
@@ -375,7 +374,7 @@ public class TxnLogToolkit implements Closeable {
         }
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "recoveryFos = ...": this method is called only from the constructor and is the only assignment to recoveryFos.
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: for "recoveryFos = ...": this method is called only from the constructor and is the only assignment to recoveryFos. (validated)
     private void openRecoveryFile() throws FileNotFoundException {
         recoveryFos = new FileOutputStream(recoveryLogFile);
         recoveryOa = BinaryOutputArchive.getArchive(recoveryFos);
