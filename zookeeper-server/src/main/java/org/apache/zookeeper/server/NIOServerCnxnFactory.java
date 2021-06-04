@@ -631,7 +631,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     @Override
     @SuppressWarnings({
             "objectconstruction:required.method.not.called", // FP: assignment to @Owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
-            "objectconstruction:reset.not.owning" // FP: calls to bind() on ss.socket() require the @CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error
+            "objectconstruction:reset.not.owning" // FP: calls to bind() on ss.socket() require the @CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
     })
     @CreatesObligation("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
