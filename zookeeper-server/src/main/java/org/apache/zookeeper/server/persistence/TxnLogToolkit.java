@@ -18,8 +18,6 @@
 
 package org.apache.zookeeper.server.persistence;
 
-import org.checkerframework.checker.objectconstruction.qual.Owning;
-
 import static org.apache.zookeeper.server.persistence.FileTxnLog.TXNLOG_MAGIC;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
