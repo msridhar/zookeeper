@@ -61,7 +61,6 @@ import org.apache.zookeeper.txn.Txn;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
 
-@SuppressWarnings("objectconstruction:required.method.not.called") // FP: The logic here is confusing. There are two variables that are set early that control whether these files get opened and closed: recovery mode and txn log mode. These variables are either always null, or if they're nonnull then the class has extra methods that have to be called. I think it's very errorprone, but it could be correct; we certainly cannot verify this kind of control flow, though, and I don't think that's a bad thing.
 public class TxnLogToolkit implements Closeable {
 
     static class TxnLogToolkitException extends Exception {
@@ -99,14 +98,12 @@ public class TxnLogToolkit implements Closeable {
     private File txnLogFile;
     private boolean recoveryMode = false;
     private boolean verbose = false;
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
-    private @Owning FileInputStream txnFis;
+    private FileInputStream txnFis;
     private BinaryInputArchive logStream;
 
     // Recovery mode
     private int crcFixed = 0;
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: checker bug: declared @Owning field
-    private @Owning FileOutputStream recoveryFos;
+    private FileOutputStream recoveryFos;
     private BinaryOutputArchive recoveryOa;
     private File recoveryLogFile;
     private FilePadding filePadding = new FilePadding();
