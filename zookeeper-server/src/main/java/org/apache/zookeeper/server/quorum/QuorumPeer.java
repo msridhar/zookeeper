@@ -1336,7 +1336,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
     boolean shuttingDownLE = false;
 
     @Override
-    @SuppressWarnings("objectconstruction:reset.not.owning") // FP: observer and follower are both set by this method, but this method is also responsible for shutting them down. Note that the calls to setObserver and setFollower are in try blocks whose finally blocks call the required methods on the relevant field. (validated)
+    @SuppressWarnings("objectconstruction:reset.not.owning") // FP CreatesObligation always followed by close(): observer and follower are both set by this method, but this method is also responsible for shutting them down. Note that the calls to setObserver and setFollower are in try blocks whose finally blocks call the required methods on the relevant field. (validated)
     public void run() {
         updateThreadName();
 

@@ -65,7 +65,7 @@ public final class FileChangeWatcher {
      *                 and <code>event.context()</code> will return the filename relative to <code>dirPath</code>.
      * @throws IOException if there is an error creating the WatchService.
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: FileSystem and WatchService need not be closed (validated)
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP missing JDK annotation (checker bug): FileSystem and WatchService need not be closed (validated)
     public FileChangeWatcher(Path dirPath, Consumer<WatchEvent<?>> callback) throws IOException {
         FileSystem fs = dirPath.getFileSystem();
         WatchService watchService = fs.newWatchService();
