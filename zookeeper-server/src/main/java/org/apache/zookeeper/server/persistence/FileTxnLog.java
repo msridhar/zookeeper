@@ -399,7 +399,7 @@ public class FileTxnLog implements TxnLog, Closeable {
      * commit the logs. make sure that everything hits the
      * disk
      */
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: requires container support for list of owners (validated)
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP container of owners: requires container support for list of owners (validated)
     public synchronized void commit() throws IOException {
         if (logStream != null) {
             logStream.flush();
@@ -655,7 +655,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          *        a given zxid
          * @throws IOException
          */
-        @SuppressWarnings("objectconstruction:reset.not.owning") // FP: CreatesObligation("this") method called by constructor (validated)
+        @SuppressWarnings("objectconstruction:reset.not.owning") // FP CreatesObligation("this") method called by constructor: (validated)
         public FileTxnIterator(File logDir, long zxid, boolean fastForward) throws IOException {
             this.logDir = logDir;
             this.zxid = zxid;

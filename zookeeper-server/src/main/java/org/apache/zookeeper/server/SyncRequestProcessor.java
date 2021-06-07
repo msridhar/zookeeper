@@ -153,7 +153,7 @@ public class SyncRequestProcessor extends ZooKeeperCriticalThread implements Req
     }
 
     @Override
-    @SuppressWarnings("objectconstruction:reset.not.owning") // ZKDatabase isn't a JDK class (validated)
+    @SuppressWarnings("objectconstruction:reset.not.owning") // not a JDK class: (validated)
     public void run() {
         try {
             // we do this in an attempt to ensure that not all of the servers

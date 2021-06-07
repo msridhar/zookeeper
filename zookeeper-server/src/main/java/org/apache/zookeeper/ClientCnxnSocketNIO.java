@@ -47,7 +47,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientCnxnSocketNIO.class);
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: initializing owning field (validated)
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP initializing owning field (checker bug): (validated)
     private final @Owning Selector selector = Selector.open();
 
     private SelectionKey sockKey;
@@ -309,7 +309,7 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
         return localSocketAddress;
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: socket is a resource alias of the owning field selector, so it doesn't need to be closed (validated)
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP resource alias: socket is a resource alias of the owning field selector, so it doesn't need to be closed (validated)
     private void updateSocketAddresses() {
         Socket socket = ((SocketChannel) sockKey.channel()).socket();
         localSocketAddress = socket.getLocalSocketAddress();

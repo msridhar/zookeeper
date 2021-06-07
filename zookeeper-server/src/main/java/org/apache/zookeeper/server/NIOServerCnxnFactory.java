@@ -457,7 +457,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
          * Iterate over the queue of accepted connections that have been
          * assigned to this thread but not yet placed on the selector.
          */
-        @SuppressWarnings("objectconstruction:required.method.not.called") // FP: If `register()` throws a ClosedSocketException or CancelledKeyException, accepted could be leaked. Mike and I believe that the code *probably* respects the requirements that this imposes: that processAcceptedConnections only be called when the selector is open and the key has not been cancelled. These requirements are not documented, and this class has methods that would allow a client to violate either of them. However, this method is private, so it might be okay. We are conservatively marking this as a false positive under the assumption that the code is correct. (validated)
+        @SuppressWarnings("objectconstruction:required.method.not.called") // FP private method and application invariant: If `register()` throws a ClosedSocketException or CancelledKeyException, accepted could be leaked. Mike and I believe that the code *probably* respects the requirements that this imposes: that processAcceptedConnections only be called when the selector is open and the key has not been cancelled. These requirements are not documented, and this class has methods that would allow a client to violate either of them. However, this method is private, so it might be okay. We are conservatively marking this as a false positive under the assumption that the code is correct. (validated)
         private void processAcceptedConnections() {
             SocketChannel accepted;
             while (!stopped && (accepted = acceptedQueue.poll()) != null) {
@@ -579,7 +579,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP: Checker bug: initializing owning field. This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug? (validated)
+    @SuppressWarnings("objectconstruction:required.method.not.called") // FP initializing owning field (checker bug): This error doesn't even include a "reason for going out of scope". I'm really not sure why it's issued, but I think it's a bug? (validated)
     @Owning ServerSocketChannel ss;
 
     /**
@@ -630,8 +630,8 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
 
     @Override
     @SuppressWarnings({
-            "objectconstruction:required.method.not.called", // FP: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
-            "objectconstruction:reset.not.owning" // FP: calls to bind() on ss.socket() require the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
+            "objectconstruction:required.method.not.called", // FP exception reasoning: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
+            "objectconstruction:reset.not.owning" // FP resource alias: calls to bind() on ss.socket() require the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
     })
     @CreatesObligation("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
@@ -697,8 +697,8 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     @Override
     @CreatesObligation("this")
     @SuppressWarnings({
-        "objectconstruction:required.method.not.called", // FP: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
-        "objectconstruction:reset.not.owning" // FP: the call to bind() on ss.socket() requires the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
+        "objectconstruction:required.method.not.called", // FP exception reasoning: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
+        "objectconstruction:reset.not.owning" // FP resource alias: the call to bind() on ss.socket() requires the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
     })
     public void reconfigure(InetSocketAddress addr) {
         ServerSocketChannel oldSS = ss;
