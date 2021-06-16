@@ -31,7 +31,7 @@ public class ByteBufferInputStream extends InputStream {
 
     ByteBuffer bb;
 
-    @SuppressWarnings("mustcall:super.invocation.invalid") // not a JDK class:  (Also, this input stream doesn't control a resource.) (validated)
+    @SuppressWarnings("mustcall:super.invocation.invalid") // count-suppressions-ignore not a JDK class:  (Also, this input stream doesn't control a resource.) (validated)
     public ByteBufferInputStream(ByteBuffer bb) {
         this.bb = bb;
     }
