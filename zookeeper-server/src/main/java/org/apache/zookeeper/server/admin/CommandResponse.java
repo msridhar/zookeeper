@@ -92,7 +92,7 @@ public class CommandResponse {
      *
      * @param m map of key/value pairs
      */
-    @SuppressWarnings("mustcall") // FP Java generics
+    @SuppressWarnings("mustcall") // FP Java 8 type argument inference
     public void putAll(Map<? extends String, ?> m) {
         data.putAll(m);
     }
