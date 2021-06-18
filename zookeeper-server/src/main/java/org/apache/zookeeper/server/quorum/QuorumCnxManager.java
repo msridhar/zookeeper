@@ -1180,7 +1180,7 @@ public class QuorumCnxManager {
          * @param sid
          *            Server identifier of remote peer
          */
-        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) // FP checker treats constructor as instance method (checker bug)
+        @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) // FP checker treats constructor as instance method (checker bug):
         SendWorker(@Owning Socket sock, Long sid) {
             super("SendWorker:" + sid);
             this.sid = sid;
