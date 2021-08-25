@@ -92,7 +92,7 @@ public class CommandResponse {
      *
      * @param m map of key/value pairs
      */
-    @SuppressWarnings("mustcall") // FP: java generics
+    @SuppressWarnings("mustcallnoaccumulationframes") // FP: java generics
     public void putAll(Map<? extends String, ?> m) {
         data.putAll(m);
     }

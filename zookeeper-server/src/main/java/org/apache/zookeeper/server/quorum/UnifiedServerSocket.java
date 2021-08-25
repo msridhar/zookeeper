@@ -74,7 +74,7 @@ public class UnifiedServerSocket extends ServerSocket {
      * @param allowInsecureConnection if true, accept plaintext connections, otherwise close them.
      * @throws IOException if {@link ServerSocket#ServerSocket()} throws.
      */
-    @SuppressWarnings("mustcall:inconsistent.constructor.type") // FP: unconnected socket constructor (validated)
+    @SuppressWarnings("mustcallnoaccumulationframes:inconsistent.constructor.type") // FP: unconnected socket constructor (validated)
     public @MustCall({}) UnifiedServerSocket(X509Util x509Util, boolean allowInsecureConnection) throws IOException {
         super();
         this.x509Util = x509Util;

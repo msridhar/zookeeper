@@ -126,7 +126,7 @@ public class SSLContextAndOptions {
         return handshakeDetectionTimeoutMillis;
     }
 
-    @SuppressWarnings("mustcall") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
+    @SuppressWarnings("mustcallnoaccumulationframes") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
     private @PolyMustCall SSLSocket configureSSLSocket(@Owning @PolyMustCall SSLSocket socket, boolean isClientSocket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, isClientSocket);
@@ -135,7 +135,7 @@ public class SSLContextAndOptions {
         return socket;
     }
 
-    @SuppressWarnings("mustcall") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
+    @SuppressWarnings("mustcallnoaccumulationframes") // FP: SSLSocket is declared as MC("close"), but it can actually be both close and {}.
     private @PolyMustCall SSLServerSocket configureSSLServerSocket(@Owning @PolyMustCall SSLServerSocket socket) {
         SSLParameters sslParameters = socket.getSSLParameters();
         configureSslParameters(sslParameters, false);
