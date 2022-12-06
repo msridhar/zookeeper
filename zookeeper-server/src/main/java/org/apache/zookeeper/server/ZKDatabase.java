@@ -60,7 +60,6 @@ import org.apache.zookeeper.txn.TxnHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -641,7 +640,7 @@ public class ZKDatabase {
      * @param si the request to append
      * @return true if the append was succesfull and false if not
      */
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public boolean append(Request si) throws IOException {
         txnCount.incrementAndGet();
         return this.snapLog.append(si);

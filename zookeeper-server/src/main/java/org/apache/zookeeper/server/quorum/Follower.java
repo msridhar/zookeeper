@@ -36,7 +36,6 @@ import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -72,7 +71,7 @@ public class Follower extends Learner {
      * @throws InterruptedException
      */
     @SuppressWarnings("objectconstruction:reset.not.owning") // FP CreatesObligation should permit the call (checker bug): this error is issued at the call to connectToLeader() below, even though there is a CreatesObligation("this") annotation on this method which should prevent it. (validated)
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     void followLeader() throws InterruptedException {
         self.end_fle = Time.currentElapsedTime();
         long electionTimeTaken = self.end_fle - self.start_fle;

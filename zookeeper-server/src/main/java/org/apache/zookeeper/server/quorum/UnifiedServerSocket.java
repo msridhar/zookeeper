@@ -33,12 +33,9 @@ import java.nio.channels.SocketChannel;
 import javax.net.ssl.SSLSocket;
 import org.apache.zookeeper.common.X509Exception;
 import org.apache.zookeeper.common.X509Util;
-import org.checkerframework.checker.objectconstruction.qual.NotOwning;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -339,7 +336,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#connect(SocketAddress)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP resource aliasing: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void connect(SocketAddress endpoint) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint);
@@ -349,7 +346,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#connect(SocketAddress, int)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP resource aliasing: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void connect(SocketAddress endpoint, int timeout) throws IOException {
             getSocketAllowUnknownMode().connect(endpoint, timeout);
@@ -359,7 +356,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#bind(SocketAddress)}. Calling this method does not trigger mode detection.
          */
         @Override
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         @SuppressWarnings({"objectconstruction:reset.not.owning"}) // FP resource aliasing: getSocketAllowUnknownMode always returns the underlying resource corresponding to this (validated)
         public void bind(SocketAddress bindpoint) throws IOException {
             getSocketAllowUnknownMode().bind(bindpoint);

@@ -39,7 +39,6 @@ import org.apache.zookeeper.util.ServiceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -124,7 +123,7 @@ public class ZooKeeperServerMain {
      * @throws IOException
      * @throws AdminServerException
      */
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public void runFromConfig(ServerConfig config) throws IOException, AdminServerException {
         LOG.info("Starting server");
         FileTxnSnapLog txnLog = null;

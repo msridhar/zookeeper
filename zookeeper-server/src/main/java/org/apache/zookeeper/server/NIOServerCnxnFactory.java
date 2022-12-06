@@ -41,7 +41,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -633,7 +632,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
             "objectconstruction:required.method.not.called", // FP exception reasoning: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
             "objectconstruction:reset.not.owning" // FP resource alias: calls to bind() on ss.socket() require the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)
     })
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException {
         if (secure) {
             throw new UnsupportedOperationException("SSL isn't supported in NIOServerCnxn");
@@ -695,7 +694,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     }
 
     @Override
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     @SuppressWarnings({
         "objectconstruction:required.method.not.called", // FP exception reasoning: assignment to owning field.  ss is bound before configureBlocking, which can throw an exception, is called. If configureBlocking does throw an exception, though, it is caught - so the caller of reconfigure() will still be able to safely close out this, as they should. (validated)
         "objectconstruction:reset.not.owning" // FP resource alias: the call to bind() on ss.socket() requires the CreatesObligation("this") annotation (because ss is an owning field), but the checker doesn't use the fact that ss.socket() is a resource alias of ss and so issues this error (validated)

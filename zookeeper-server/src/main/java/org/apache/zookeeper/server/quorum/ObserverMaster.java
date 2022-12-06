@@ -46,7 +46,6 @@ import org.apache.zookeeper.server.quorum.auth.QuorumAuthServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -430,7 +429,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
     }
 
     @SuppressWarnings("objectconstruction:required.method.not.called") // FP nullness reasoning: warning about overwriting `ss`.  After the first if statement, thread is null, or thread is non-null and not alive. If thread is null, this is the first time that start() has been called, and ss is being set for the first time.  If thread is non-null and not alive, then stop() has been called (this code does not use the more modern interrupt() idiom), so `ss` has been closed. (validated)
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public synchronized void start() throws IOException {
         if (thread != null && thread.isAlive()) {
             return;

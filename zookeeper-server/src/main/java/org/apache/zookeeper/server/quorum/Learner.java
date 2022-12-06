@@ -64,11 +64,9 @@ import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnDigest;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
-import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -304,7 +302,7 @@ public class Learner {
      * Overridable helper method to simply call sock.connect(). This can be
      * overriden in tests to fake connection success/failure for connectToLeader.
      */
-    @CreatesObligation("#1")
+    @CreatesMustCallFor("#1")
     protected void sockConnect(Socket sock, InetSocketAddress addr, int timeout) throws IOException {
         sock.connect(addr, timeout);
     }
@@ -317,7 +315,7 @@ public class Learner {
      * @throws IOException - if the socket connection fails on the 5th attempt
      * if there is an authentication failure while connecting to leader
      */
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     @SuppressWarnings("objectconstruction:required.method.not.called") // TP: see the comment on the assignment sock = socketGet below (validated)
     protected void connectToLeader(MultipleAddresses multiAddr, String hostname) throws IOException {
 

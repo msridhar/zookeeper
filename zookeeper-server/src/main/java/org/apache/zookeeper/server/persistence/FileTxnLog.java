@@ -52,7 +52,6 @@ import org.apache.zookeeper.txn.TxnHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -274,7 +273,7 @@ public class FileTxnLog implements TxnLog, Closeable {
     }
 
     @Override
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     @SuppressWarnings("objectconstruction:required.method.not.called") // TP: for the required.method.not.called error, see comment below. This warning suppresses the related warnings. (validated)
     public synchronized boolean append(TxnHeader hdr, Record txn, TxnDigest digest) throws IOException {
         if (hdr == null) {
@@ -685,7 +684,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * this is inclusive of the zxid
          * @throws IOException
          */
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         void init() throws IOException {
             storedFiles = new ArrayList<>();
             List<File> files = Util.sortDataDir(
@@ -722,7 +721,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * new file to be read
          * @throws IOException
          */
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         private boolean goToNextLog() throws IOException {
             if (storedFiles.size() > 0) {
                 this.logFile = storedFiles.remove(storedFiles.size() - 1);
@@ -753,7 +752,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @param logFile the file to read.
          * @throws IOException
          **/
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         protected InputArchive createInputArchive(File logFile) throws IOException {
             if (inputStream == null) {
                 inputStream = new PositionInputStream(new BufferedInputStream(new FileInputStream(logFile)));
@@ -778,7 +777,7 @@ public class FileTxnLog implements TxnLog, Closeable {
          * @return true if there is more transactions to be read
          * false if not.
          */
-        @CreatesObligation("this")
+        @CreatesMustCallFor("this")
         public boolean next() throws IOException {
             if (ia == null) {
                 return false;

@@ -37,7 +37,7 @@ import org.apache.zookeeper.server.auth.SaslServerCallbackHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.mustcall.qual.CreatesObligation;
+import org.checkerframework.checker.mustcall.qual.CreatesMustCallFor;
 
 public abstract class ServerCnxnFactory {
 
@@ -103,20 +103,20 @@ public abstract class ServerCnxnFactory {
         return zkServer;
     }
 
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public void configure(InetSocketAddress addr, int maxcc) throws IOException {
         configure(addr, maxcc, -1);
     }
 
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public void configure(InetSocketAddress addr, int maxcc, int backlog) throws IOException {
         configure(addr, maxcc, backlog, false);
     }
 
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public abstract void configure(InetSocketAddress addr, int maxcc, int backlog, boolean secure) throws IOException;
 
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public abstract void reconfigure(InetSocketAddress addr);
 
     protected SaslServerCallbackHandler saslServerCallbackHandler;

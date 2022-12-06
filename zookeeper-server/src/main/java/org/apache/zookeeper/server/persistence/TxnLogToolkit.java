@@ -61,7 +61,6 @@ import org.apache.zookeeper.txn.Txn;
 import org.apache.zookeeper.txn.TxnHeader;
 import org.apache.zookeeper.util.ServiceUtils;
 
-import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 public class TxnLogToolkit implements Closeable {
 

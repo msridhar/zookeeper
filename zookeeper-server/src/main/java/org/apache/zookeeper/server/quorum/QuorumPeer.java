@@ -83,7 +83,6 @@ import org.apache.zookeeper.server.util.ZxidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -1999,7 +1998,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         this.quorumListenOnAllIPs = quorumListenOnAllIPs;
     }
 
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public void setCnxnFactory(ServerCnxnFactory cnxnFactory) {
         this.cnxnFactory = cnxnFactory;
     }

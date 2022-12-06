@@ -71,11 +71,9 @@ import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 import org.apache.zookeeper.server.util.ConfigUtils;
 import org.apache.zookeeper.util.CircularBlockingQueue;
 import org.apache.zookeeper.util.ServiceUtils;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -1071,7 +1069,7 @@ public class QuorumCnxManager {
                     "objectconstruction:required.method.not.called", // FP exception reasoning: Warning about re-assigning owning field `serverSocket`.  The first assignment is OK, because this method is private and is only called on new instances where `serverSocket` is null.  There is a second iteration only if shutdown is false.  shutdown is false only if the inner loop throws an exception, but the inner loop catches IOException and calls close() before the outer loop goes around again.  If the inner loop throws an exception other than IOException, then it is not caught by the outer loop and the outer loop terminates without iterating a second time. (validated)
                     "objectconstruction:required.method.not.called", // TP: Warning about re-assigning local variable `client`.  The body calls receiveConnection{Async} which is owning, so that is OK.  setSockOpts may throw SocketException which is a subtype of IO exception, and the catch clause closes `client`.  However, if SocketTimeoutException is thrown, then `client` never gets closed before the next iteration of the inner while loop. (validated)
             })
-            @CreatesObligation("this")
+            @CreatesMustCallFor("this")
             private void acceptConnections() {
                 int numRetries = 0;
                 Socket client = null;

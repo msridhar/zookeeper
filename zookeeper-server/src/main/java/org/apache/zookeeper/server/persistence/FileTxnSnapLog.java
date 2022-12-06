@@ -43,7 +43,6 @@ import org.apache.zookeeper.txn.TxnHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.calledmethods.qual.*;
 import org.checkerframework.checker.mustcall.qual.*;
 
@@ -504,7 +503,7 @@ public class FileTxnSnapLog {
      * @return true if able to truncate the log, false if not
      * @throws IOException
      */
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public boolean truncateLog(long zxid) {
         try {
             // close the existing txnLog and snapLog
@@ -584,7 +583,7 @@ public class FileTxnSnapLog {
      * @return true iff something appended, otw false
      * @throws IOException
      */
-    @CreatesObligation("this")
+    @CreatesMustCallFor("this")
     public boolean append(Request si) throws IOException {
         return txnLog.append(si.getHdr(), si.getTxn(), si.getTxnDigest());
     }
