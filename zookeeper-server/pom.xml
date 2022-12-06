@@ -346,10 +346,12 @@
               <version>3.28.0</version>
             </path>
           </annotationProcessorPaths>
+          <annotationProcessors>
+            <annotationProcessor>org.checkerframework.checker.resourceleak.ResourceLeakChecker</annotationProcessor>
+          </annotationProcessors>          
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-            <arg>-AcheckMustCall</arg>
             <!--arg>-AonlyUses=^java\.</arg-->
             <arg>-AcountMustCall</arg>
             <arg>-ArequirePrefixInWarningSuppressions</arg>
