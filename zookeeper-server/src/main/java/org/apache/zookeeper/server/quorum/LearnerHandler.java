@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * learner. All communication with a learner is handled by this
  * class.
  */
-public @MustCall("shutdown") class LearnerHandler extends ZooKeeperThread {
+public @InheritableMustCall("shutdown") class LearnerHandler extends ZooKeeperThread {
 
     private static final Logger LOG = LoggerFactory.getLogger(LearnerHandler.class);
 

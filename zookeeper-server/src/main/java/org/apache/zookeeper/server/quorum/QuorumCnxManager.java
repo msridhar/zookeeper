@@ -1159,7 +1159,7 @@ public class QuorumCnxManager {
      * soon as there is one available. If connection breaks, then opens a new
      * one.
      */
-    @MustCall("finish")
+    @InheritableMustCall("finish")
     class SendWorker extends ZooKeeperThread {
 
         Long sid;
@@ -1207,7 +1207,7 @@ public class QuorumCnxManager {
             return recvWorker;
         }
 
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP depends on boolean variable: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
+        @SuppressWarnings("calledmethods:contracts.postcondition.not.satisfied") // FP depends on boolean variable: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
         @EnsuresCalledMethods(value="this.sock", methods="close")
         synchronized boolean finish() {
             LOG.debug("Calling SendWorker.finish for {}", sid);
@@ -1345,7 +1345,7 @@ public class QuorumCnxManager {
      * Thread to receive messages. Instance waits on a socket read. If the
      * channel breaks, then removes itself from the pool of receivers.
      */
-    @MustCall("run")
+    @InheritableMustCall("run")
     class RecvWorker extends ZooKeeperThread {
 
         Long sid;

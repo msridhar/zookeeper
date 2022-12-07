@@ -65,7 +65,7 @@ import org.checkerframework.checker.mustcall.qual.*;
  *
  * The logic is quite a bit simpler than the corresponding logic in Leader because it only hosts observers.
  */
-@MustCall("stop")
+@InheritableMustCall("stop")
 public class ObserverMaster extends LearnerMaster implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObserverMaster.class);
