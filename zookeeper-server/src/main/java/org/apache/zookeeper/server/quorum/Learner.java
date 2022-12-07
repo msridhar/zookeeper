@@ -849,7 +849,7 @@ public class Learner {
     /**
      * Shutdown the Peer
      */
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP depends on inaccessible variable: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.  Note that one of the methods called before closeSocket() might throw an exception, but the checker ignores such unchecked exceptions to reduce false positives.  (validated)
+    @SuppressWarnings("builder:contracts.postcondition") // FP depends on inaccessible variable: closeSocket() does this, but isn't verifiable. Since this method doesn't mention this.sock at all, this postcondition can't be verified, so I just suppressed it here and didn't bother trying to verify the rest of the chain.  Note that one of the methods called before closeSocket() might throw an exception, but the checker ignores such unchecked exceptions to reduce false positives.  (validated)
     @EnsuresCalledMethods(value="this.sock", methods="close")
     public void shutdown() {
         self.setZooKeeperServer(null);
@@ -871,7 +871,7 @@ public class Learner {
         return self.isRunning() && zk.isRunning();
     }
 
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
+    @SuppressWarnings("builder:contracts.postcondition") // FP nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
     @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSocket() {
         if (sock != null) {
@@ -887,7 +887,7 @@ public class Learner {
         }
     }
 
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
+    @SuppressWarnings("builder:contracts.postcondition") // FP nullness reasoning: either this.sock is null (no need to call anything), or this.sock gets closed
     @EnsuresCalledMethods(value="this.sock", methods="close")
     void closeSockSync() {
         try {

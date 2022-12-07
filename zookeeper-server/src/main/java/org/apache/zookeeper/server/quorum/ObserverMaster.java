@@ -489,7 +489,7 @@ public class ObserverMaster extends LearnerMaster implements Runnable {
          */
     }
 
-    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP nullness reasoning: either ss is null (no need to call anything), or ss.close() gets called
+    @SuppressWarnings("builder:contracts.postcondition") // FP nullness reasoning: either ss is null (no need to call anything), or ss.close() gets called
     @EnsuresCalledMethods(value="ss", methods="close")
     public synchronized void stop() {
         if (ss != null) {

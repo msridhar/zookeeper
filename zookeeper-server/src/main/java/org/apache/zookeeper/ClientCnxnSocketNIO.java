@@ -308,7 +308,6 @@ public class ClientCnxnSocketNIO extends ClientCnxnSocket {
         return localSocketAddress;
     }
 
-    @SuppressWarnings("objectconstruction:required.method.not.called") // FP resource alias: socket is a resource alias of the owning field selector, so it doesn't need to be closed (validated)
     private void updateSocketAddresses() {
         Socket socket = ((SocketChannel) sockKey.channel()).socket();
         localSocketAddress = socket.getLocalSocketAddress();

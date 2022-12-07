@@ -595,7 +595,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#close()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied") // FP resource aliasing: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null (validated)
+        @SuppressWarnings("builder:destructor.exceptional.postcondition") // FP resource aliasing: getSocketAllowUnknownMode will return sslSocket iff sslSocket is non-null (validated)
         @EnsuresCalledMethods(value="sslSocket", methods="close")
         public synchronized void close() throws IOException {
             getSocketAllowUnknownMode().close();
@@ -645,7 +645,7 @@ public class UnifiedServerSocket extends ServerSocket {
          * See {@link Socket#isClosed()}. Calling this method does not trigger mode detection.
          */
         @Override
-        @SuppressWarnings("objectconstruction:contracts.conditional.postcondition.not.satisfied") // FP resource aliasing: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this (validated)
+        @SuppressWarnings("builder:contracts.conditional.postcondition") // FP resource aliasing: calling isClosed on getSocketAllowUnknownMode will always return the same result as calling it on this (validated)
         public boolean isClosed() {
             return getSocketAllowUnknownMode().isClosed();
         }

@@ -1207,7 +1207,7 @@ public class QuorumCnxManager {
             return recvWorker;
         }
 
-        @SuppressWarnings("calledmethods:contracts.postcondition.not.satisfied") // FP depends on boolean variable: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
+        @SuppressWarnings("builder:contracts.postcondition") // FP depends on boolean variable: if `running` is false, then the socket has already been closed; otherwise, closeSocket is called. (validated)
         @EnsuresCalledMethods(value="this.sock", methods="close")
         synchronized boolean finish() {
             LOG.debug("Calling SendWorker.finish for {}", sid);

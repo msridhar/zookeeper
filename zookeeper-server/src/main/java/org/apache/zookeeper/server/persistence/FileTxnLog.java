@@ -654,7 +654,6 @@ public class FileTxnLog implements TxnLog, Closeable {
          *        a given zxid
          * @throws IOException
          */
-        @SuppressWarnings("objectconstruction:reset.not.owning") // FP CreatesObligation method called by constructor: (validated)
         public FileTxnIterator(File logDir, long zxid, boolean fastForward) throws IOException {
             this.logDir = logDir;
             this.zxid = zxid;
